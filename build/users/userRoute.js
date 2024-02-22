@@ -21,8 +21,9 @@ router.post('/signup', userMiddleware_1.validateUser, (req, res) => __awaiter(vo
     res.status(201).json({ createUser });
 }));
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const reqBody = req.body
     const loginUser = yield userController_1.default.login(req.body);
-    console.log(yield userController_1.default.login(req.body));
+    // console.log(await userController.login(req.body))
     res.json({ loginUser });
 }));
 router.post('/verify_email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

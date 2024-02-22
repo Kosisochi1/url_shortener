@@ -101,7 +101,7 @@ const verifyMail = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
         }
         verifyUser.isVerified = true;
         verifyUser.verifiedDate = new Date();
-        // verifyUser.verificationToken = ''
+        verifyUser.verificationToken = '';
         verifyUser.save();
         return {
             massage: 'User Verified',
@@ -111,43 +111,45 @@ const verifyMail = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
     }
 });
-const login = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userExit = yield userModel_1.default.findOne({ Email: reqBody.Email });
-        if (!userExit) {
-            return {
-                massage: 'Not Matched User',
-                code: 401
-            };
-        }
-        const validaUser = yield userExit.isValidPassword(reqBody.Password);
-        if (!validaUser) {
-            return {
-                massage: 'Incorrect Login Details',
-                code: 422
-            };
-        }
-        if (userExit.isVerified == false) {
-            return {
-                massage: 'User not verified',
-                code: 401
-            };
-        }
-        const token = yield jsonwebtoken_1.default.sign({ Email: userExit.Email, _id: userExit._id }, secrete_key, { expiresIn: '1h' });
-        return {
-            massage: 'Login Successful',
-            code: '200',
-            data: {
-                userExit,
-                token
+function login(reqBody) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userExit = yield userModel_1.default.findOne({ Email: reqBody.Email });
+            if (!userExit) {
+                return {
+                    massage: 'Not Matched User',
+                    code: 401
+                };
             }
-        };
-    }
-    catch (error) {
-        return {
-            massage: ' Server Error',
-            code: 501
-        };
-    }
-});
+            const validaUser = userExit.isValidPassword(reqBody.Password);
+            if (!validaUser) {
+                return {
+                    massage: 'Incorrect Login Details',
+                    code: 422
+                };
+            }
+            if (userExit.isVerified == false) {
+                return {
+                    massage: 'User not verified',
+                    code: 401
+                };
+            }
+            const token = jsonwebtoken_1.default.sign({ Email: userExit.Email, _id: userExit._id }, secrete_key, { expiresIn: '1h' });
+            return {
+                massage: 'Login Successful',
+                code: '200',
+                data: {
+                    userExit,
+                    token
+                }
+            };
+        }
+        catch (error) {
+            return {
+                massage: ' Server Error',
+                code: 501
+            };
+        }
+    });
+}
 exports.default = { createUser, login, verifyMail };

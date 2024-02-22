@@ -4,6 +4,7 @@ import { connect } from './db';
 import user from "./users/userController"
 import authenticateUser from './auth/auth'
 import router from "./users/userRoute";
+import urlRoute from "./urls/urlRoute";
 
 dotenv.config();
 
@@ -19,7 +20,8 @@ app.post('/', async(req: Request, res: Response) => {
 	// console.log(cUser)
 	res.send('Express+TypeScript');
 });
-app.use('/user',router)
+app.use('/user', router)
+app.use('/url',urlRoute)
 // app.post('/login',authenticateUser,async (req:Request,res:Response) => {
 // 	// console.log(authenticate.authenticateUser)
 // 	console.log(Headers)

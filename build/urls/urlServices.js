@@ -35,31 +35,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importStar(require("mongoose"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const UserSchema = new mongoose_1.Schema({
-    Name: { type: String, require: true },
-    Email: { type: String, require: true },
-    Password: { type: String, require: true },
-    verificationToken: { type: String, require: true },
-    isVerified: { type: Boolean, default: false },
-    verifiedDate: {
-        type: Date
+const dotenv = __importStar(require("dotenv"));
+dotenv.config({ path: __dirname + '/./../../.env' });
+const urlModel_1 = __importDefault(require("../model/urlModel"));
+const validUrl_1 = require("../utils/validUrl");
+const QrCode_1 = require("../utils/QrCode");
+const shortUrl_1 = require("../utils/shortUrl");
+const createShortUrl = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, validUrl_1.checkUrl)(reqBody.Long_url);
+        if (!validUrl_1.checkUrl) {
+            return {
+                massage: 'Url not valid',
+                code: 400
+            };
+        }
+        const url_exist = yield urlModel_1.default.findOne({ Long_url: reqBody.Long_url, User_id: reqBody.User_id });
+        if (url_exist.Long_url == reqBody.Long_url) {
+            return {
+                massage: 'short url exist',
+                code: 401
+            };
+        }
+        const short_url = yield urlModel_1.default.create({
+            Long_url: reqBody.Long_url,
+            Custom_url: reqBody.Custom_url,
+            Qr_code: (0, QrCode_1.qrCode)(reqBody.Long_url),
+            Short_url: (0, shortUrl_1.url_short)(reqBody.Custom_url),
+        });
+    }
+    catch (error) {
     }
 });
-UserSchema.pre('save', function (next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const user = this;
-        const hash = yield bcrypt_1.default.hash(this.Password, 10);
-        this.Password = hash;
-        next();
-    });
-});
-UserSchema.methods.isValidPassword = function (Password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const comparePassword = yield bcrypt_1.default.compare(Password, this.Password);
-        return comparePassword;
-    });
-};
-const UserModel = mongoose_1.default.model('user', UserSchema);
-exports.default = UserModel;

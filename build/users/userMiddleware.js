@@ -44,7 +44,7 @@ function validateLogin(req, res, next) {
             next();
         }
         catch (err) {
-            return res.status(422).json({ err });
+            return res.status(422).json({ err: err.details[1] });
         }
     });
 }
