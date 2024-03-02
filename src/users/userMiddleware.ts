@@ -14,8 +14,8 @@ import Joi, { ErrorReport, options } from 'joi'
         })
         await schema.validateAsync(req.body, { abortEarly: true })
         next()
-    } catch (err) {
-        return res.status(422).json({ err })
+    } catch (err:any) {
+        return res.status(422).json({ err:err.details[1] })
     }
 }
         

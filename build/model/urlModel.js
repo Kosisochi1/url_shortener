@@ -34,11 +34,11 @@ const UrlSchema = new mongoose_1.Schema({
     },
     Qr_code: {
         type: String,
-        require: true
+        // require: true
     },
     Short_url: {
         type: String,
-        require: true
+        // require:true
     },
     Url_click_count: {
         type: Number,

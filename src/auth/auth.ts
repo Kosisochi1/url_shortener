@@ -3,6 +3,7 @@ import express, { Express,Request,Response,NextFunction } from "express";
 import jwt, { Secret } from 'jsonwebtoken'
 import * as  dotenv from 'dotenv'
 import { ok } from "assert";
+import { logger } from "../logger";
 // import { NextFunction } from "express";
 
 
@@ -10,9 +11,6 @@ dotenv.config();
 const secrete_key:any = process.env.SECRETE_KEY
 
 
-interface CustomRequest extends Request{
-    userExist: Request
-}
 
 async function authenticateUser   (req: any, res: any, next: NextFunction){
     try {
@@ -27,11 +25,11 @@ async function authenticateUser   (req: any, res: any, next: NextFunction){
         const verifyToken:any = jwt.verify(token, secrete_key)
         
         
-        console.log(verifyToken.Email)
+        // console.log(verifyToken.Email)
         const verifyUser: any = await UserModel.findOne({ Email: verifyToken.Email})
         
         
-        console.log(verifyUser)
+        // console.log(verifyUser)
         if (!verifyUser) {
             return res.status(401).json( {
             massage: 'You are not Authorize',
@@ -48,4 +46,30 @@ async function authenticateUser   (req: any, res: any, next: NextFunction){
         }
     }
 }
- export default authenticateUser
+
+const authenticate = async (req:any, res:any, next:NextFunction) => {
+	logger.info('[check]=> Available  Cookies  ');
+
+    const token = req.cookies.jwt;
+	if (token) {
+		logger.info('[Cookies]=> Available    ');
+
+		try {
+			logger.info('[Auth Process]=> started    ');
+
+			const decodeValue = await jwt.verify(token, secrete_key);
+			res.locals.loginUser = decodeValue;
+			logger.info('[Auth Process]=> completed    ');
+
+			next();
+		} catch (error) {
+			logger.info('[Auth Process]=> Server Error    ');
+
+			return res.status(500).json({
+				massage: 'Server',
+			});
+		}
+	}
+};
+
+ export default {authenticateUser,authenticate}

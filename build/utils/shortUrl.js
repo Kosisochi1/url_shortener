@@ -16,17 +16,12 @@ exports.url_short = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 function url_short(reqBody) {
     return __awaiter(this, void 0, void 0, function* () {
-        const uKey = crypto_1.default.randomBytes(4, (err, buff) => {
-            if (err) {
-                throw err;
-            }
-            buff.toString('hex');
-        });
-        if (reqBody.Custom_url == '') {
-            return `s.eke.${uKey}`;
+        const uKey = crypto_1.default.randomBytes(4).toString('hex').slice(0, 7);
+        if (reqBody == '') {
+            return uKey;
         }
         else {
-            return `s.eke.${reqBody.Custom_url}`;
+            return reqBody;
         }
     });
 }

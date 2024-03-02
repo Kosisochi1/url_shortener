@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../public/logind.css" />
+
+		<title>Document</title>
+	</head>
+	<body>
+		<header><%- include('./partials/header'); %></header>
+
+		<main class="success">
+			<h3>Wrong details!</h3>
+			<p>Please, check your mail and password</p>
+
+			<form action="/login">
+				<button onclick="this.form.submit" name="continue" type="submit">
+					Try again
+				</button>
+			</form>
+		</main>
+		<footer><%- include('./partials/footer'); %></footer>
+	</body>
+</html>

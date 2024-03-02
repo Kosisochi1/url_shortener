@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../model/userModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv = __importStar(require("dotenv"));
+const logger_1 = require("../logger");
 // import { NextFunction } from "express";
 dotenv.config();
 const secrete_key = process.env.SECRETE_KEY;
@@ -53,9 +54,9 @@ function authenticateUser(req, res, next) {
             }
             const token = authHeaders.authorization.split(' ')[1];
             const verifyToken = jsonwebtoken_1.default.verify(token, secrete_key);
-            console.log(verifyToken.Email);
+            // console.log(verifyToken.Email)
             const verifyUser = yield userModel_1.default.findOne({ Email: verifyToken.Email });
-            console.log(verifyUser);
+            // console.log(verifyUser)
             if (!verifyUser) {
                 return res.status(401).json({
                     massage: 'You are not Authorize',
@@ -73,4 +74,24 @@ function authenticateUser(req, res, next) {
         }
     });
 }
-exports.default = authenticateUser;
+const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    logger_1.logger.info('[check]=> Available  Cookies  ');
+    const token = req.cookies.jwt;
+    if (token) {
+        logger_1.logger.info('[Cookies]=> Available    ');
+        try {
+            logger_1.logger.info('[Auth Process]=> started    ');
+            const decodeValue = yield jsonwebtoken_1.default.verify(token, secrete_key);
+            res.locals.loginUser = decodeValue;
+            logger_1.logger.info('[Auth Process]=> completed    ');
+            next();
+        }
+        catch (error) {
+            logger_1.logger.info('[Auth Process]=> Server Error    ');
+            return res.status(500).json({
+                massage: 'Server',
+            });
+        }
+    }
+});
+exports.default = { authenticateUser, authenticate };

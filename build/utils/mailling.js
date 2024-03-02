@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendVerification = exports.mailSender = void 0;
+exports.passwordReset = exports.sendVerification = exports.mailSender = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
@@ -59,3 +59,7 @@ const sendVerification = (mailObj) => __awaiter(void 0, void 0, void 0, function
     return (0, exports.mailSender)(mailObj.to, mailObj.subject, mailObj.html);
 });
 exports.sendVerification = sendVerification;
+const passwordReset = (mailObj) => __awaiter(void 0, void 0, void 0, function* () {
+    return (0, exports.mailSender)(mailObj.to, mailObj.subject, mailObj.html);
+});
+exports.passwordReset = passwordReset;

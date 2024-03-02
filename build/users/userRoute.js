@@ -15,19 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userController_1 = __importDefault(require("./userController"));
 const userMiddleware_1 = require("./userMiddleware");
+const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const router = express_1.default.Router();
-router.post('/signup', userMiddleware_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const createUser = yield userController_1.default.createUser(req.body);
-    res.status(201).json({ createUser });
+const limiter = (0, express_rate_limit_1.default)({
+    windowMs: 30 * 60 * 1000,
+    limit: 10,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false
+});
+router.post('/signup', userMiddleware_1.validateUser, userController_1.default.createUser);
+router.post('/login', userMiddleware_1.validateLogin, userController_1.default.login);
+router.post('/verify_email', userController_1.default.verifyMail);
+router.post('/forget_password', userController_1.default.forgot_password);
+router.get('/forget_password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send(`<div>
+    <form >
+    <input type= 'text'>
+    <button>Reset</button>
+    </form>
+    </div>`);
 }));
-router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const reqBody = req.body
-    const loginUser = yield userController_1.default.login(req.body);
-    // console.log(await userController.login(req.body))
-    res.json({ loginUser });
-}));
-router.post('/verify_email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const verifyMail = yield userController_1.default.verifyMail(req.body);
-    res.json({ verifyMail });
-}));
+router.post('/reset_password', userController_1.default.resetPassword);
 exports.default = router;

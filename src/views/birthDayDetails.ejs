@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../public/signup.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<header><%- include('./partials/header'); %></header>
+
+		<main class="signup">
+			<form action="/addDetails" method="post" class="form">
+				<h3>Birth Information</h3>
+				<label for="Name">Name</label><br />
+				<input type="text" id="Name" name="Name" value="" /><br />
+				<label for="DoB">DoB</label><br />
+				<input type="date" id="DoB" name="DoB" value="" /><br /><br />
+				<label for="Email">Email</label><br />
+				<input type="email" id="Email" name="Email" value="" /><br /><br />
+
+				<input class="submit" type="submit" value="SUBMIT" />
+			</form>
+		</main>
+		<footer><%- include('./partials/footer'); %></footer>
+	</body>
+</html>

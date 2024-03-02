@@ -35,3 +35,10 @@ export const sendVerification = async (mailObj: { name: any; verificationToken: 
     
 return mailSender(mailObj.to,mailObj.subject,mailObj.html)
 }
+export const passwordReset = async (mailObj: { name: any; passwordToken: any; origin: string; to: any; subject: string; html: string }) => {
+  
+   
+
+    
+return mailSender(mailObj.to,mailObj.subject,mailObj.html)
+}

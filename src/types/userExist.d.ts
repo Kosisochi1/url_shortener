@@ -1,5 +1,6 @@
-declare namespace Express {
+
+declare global {namespace Express {
     export interface Request {
       userExist: any
     }
-  }
+  }}

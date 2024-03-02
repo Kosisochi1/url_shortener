@@ -1,4 +1,4 @@
-import mongoose,{ Schema, Document,model  } from "mongoose";
+import mongoose,{ Schema, Document,model ,Types } from "mongoose";
 
 
 interface IUrl extends Document{
