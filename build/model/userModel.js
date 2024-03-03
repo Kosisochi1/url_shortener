@@ -66,7 +66,7 @@ UserSchema.pre('save', function (next) {
 UserSchema.methods.isValidPassword = function (Password) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = this;
-        return yield bcrypt_1.default.compare(Password, this.Password);
+        return yield bcrypt_1.default.compare(Password, this.P);
     });
 };
 const UserModel = mongoose_1.default.model('user', UserSchema);

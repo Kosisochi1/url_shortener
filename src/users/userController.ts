@@ -42,7 +42,7 @@ const createUser = async (req:any,res:any) => {
 
     try {
         logger.info('[Create User Process]=> started    ');
-        const { Name, Email, Password } = req.body
+        const { Name, Email,Password } = req.body
         
         const userExist = await UserModel.findOne({ Email: req.body.Email })
         if (userExist) {
