@@ -130,10 +130,7 @@ function redirectShortUrl(req, res) {
             logger_1.logger.info('[Redirect Url  process ]=>  COmpleted    ');
             const goto = `http://${getShortUrl === null || getShortUrl === void 0 ? void 0 : getShortUrl.Long_url}`;
             cache_1.default.set(dKey, goto, 24 * 60 * 60);
-            return res.status(200).json({
-                massage: 'Please redirect ',
-                data: { getShortUrl, goto },
-            });
+            return res.status(200).redirect(goto);
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Redirecte Url    ');
@@ -170,12 +167,17 @@ function historyList(req, res) {
 function editUrl(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         logger_1.logger.info('[Edit Url  Process ]=>  Started    ');
+        // const { id } = req.params.id
         try {
-            const findUrl = yield urlModel_1.default.findOneAndUpdate({ Short_url: req.userExist._id }, req.body, { new: true });
+            const findUrl = yield urlModel_1.default.findOne({ Short_url: req.params.id });
+            if (!findUrl) {
+                return res.status(401).json({ massage: 'Not Found' });
+            }
+            const updatedUrl = yield urlModel_1.default.updateOne({ _id: findUrl._id }, { Long_url: req.body.Long_url });
             logger_1.logger.info('[Edit Url  Process ]=>  Completed    ');
             return res.status(200).json({
                 massage: 'Url updated',
-                data: findUrl
+                data: updatedUrl
             });
         }
         catch (error) {

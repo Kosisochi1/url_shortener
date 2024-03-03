@@ -54,7 +54,7 @@ UserSchema.pre('save', function (next) {
             return next();
         try {
             const saltRounds = 10;
-            const hash = bcrypt_1.default.hash(user.Password, saltRounds);
+            const hash = yield bcrypt_1.default.hash(user.Password, saltRounds);
             user.Password = hash;
             next();
         }
@@ -63,9 +63,10 @@ UserSchema.pre('save', function (next) {
         }
     });
 });
-UserSchema.methods.isValidPassword = function (Password, hashPassword) {
+UserSchema.methods.isValidPassword = function (Password) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield bcrypt_1.default.compare(Password, hashPassword);
+        const user = this;
+        return yield bcrypt_1.default.compare(Password, this.Password);
     });
 };
 const UserModel = mongoose_1.default.model('user', UserSchema);

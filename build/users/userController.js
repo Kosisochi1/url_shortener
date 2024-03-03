@@ -83,7 +83,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const verifyMail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { Email, verificationToken } = req.bodyQ;
+        const { Email, verificationToken } = req.body;
         const verifyUser = yield userModel_1.default.findOne({ Email: Email });
         if (!verifyUser) {
             return res.status(401).json({ massage: ' Mail not Verified one' });
@@ -117,12 +117,12 @@ function forgot_password(req, res) {
                 logger_1.logger.info('[ Mail verification Process]=> started    ');
                 (0, mailling_1.passwordReset)({
                     name: user.Name,
-                    passwordToken: user.passwordToken,
+                    passwordToken: passwordToken,
                     origin: origin,
                     to: user.Email,
                     subject: ' Mail Verification',
                     html: ` <h4>Hi ${user.Name}</h4> </br>
-                <p>Please verify your mail!!!  <a href="${origin}/user/forget_password?passwordToken=${user.passwordToken}&Email=${user.Email}"> Click Reset Password</a></p>`
+                <p>Please verify your mail!!!  <a href="${origin}/user/reset_password?passwordToken=${user.passwordToken}&Email=${user.Email}"> Click Reset Password</a></p>`
                 });
                 const tenMinutes = 1000 * 60 * 10;
                 const passwordTokenExpDate = new Date(Date.now() + tenMinutes);
@@ -140,21 +140,23 @@ function forgot_password(req, res) {
 }
 function resetPassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { Email } = req.query;
         const { Password } = req.body;
         try {
             const timeNow = Date.now();
-            const newPassword = yield userModel_1.default.findOne({ Email: Email });
-            if (newPassword.Email == Email && newPassword.passwordTokenExpDate > timeNow) {
+            const newPassword = yield userModel_1.default.findOne({ Email: req.query.Email });
+            if (newPassword.Email == req.query.Email && newPassword.passwordTokenExpDate < timeNow) {
                 newPassword.Password = Password;
                 newPassword.passwordTokenExpDate = new Date();
                 newPassword.passwordToken = '';
                 newPassword.save();
+                return res.status(200).json({
+                    massage: 'Reset completed',
+                    newPassword
+                });
             }
-            return res.status(200).json({
-                massage: 'Reset completed',
-                newPassword
-            });
+            else {
+                return res.status(422).json({ massage: 'Not Authorize' });
+            }
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Reser Password ');
@@ -171,7 +173,7 @@ function login(req, res) {
             if (!userExit) {
                 return res.status(404).json({ massage: 'Not Matched User' });
             }
-            const validaUser = userExit.isValidPassword(Password, userExit.Password);
+            const validaUser = yield userExit.isValidPassword(Password);
             console.log(validaUser);
             if (!validaUser) {
                 return res.status(422).json({ massage: 'Not Matched User' });
