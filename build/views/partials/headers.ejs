@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../../public/partials.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+		<title>Document</title>
+	</head>
+	<body>
+		<nav class="nav">
+			<div>
+				<img src="../../public/image/kosi.jpg" alt="logo" class="logo" />
+			</div>
+
+			<div>
+				<ul class="nav_item">
+					<%if(loginUser){%>
+					<li><a href="/home">Home</a></li>
+					<li><a href="/analytic">Analysis</a></li>
+					<li><a href="/history_list">History</a></li>
+					<li><a href="/logout">Logout</a></li>
+					<%}else{%>
+					<li><a href="/signup">Signup</a></li>
+					<li><a href="/login">Login</a></li>
+					<%}%>
+				</ul>
+			</div>
+			<a class="menu"> <i class="fa fa-bars"></i></a>
+		</nav>
+	</body>
+</html>

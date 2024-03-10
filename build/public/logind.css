@@ -1,0 +1,145 @@
+*,::after,::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+body{
+
+    background-color: rgb(219, 214, 224);
+    height: 70vh;
+}
+.login{
+    width: 400px;
+    height: 300px;
+    background-color: white;
+    margin: 4rem auto;
+    border-radius: 10px;
+    border: 3px outset aliceblue;
+}
+.form{
+    width: 300px;
+    height: 200px;
+    margin: 0 auto;
+    background-color: white;
+    padding-top: px;
+
+}
+.form>input{
+    margin: 0.2rem 0.2rem;
+    width: 300px;
+    height: 30px;
+    border: 4px groove aliceblue;
+    border-radius: 4px;
+
+}
+.form>input,label{
+
+    margin: 0.2rem 0.2rem;
+    width: 300px;
+    height: 25px;
+
+}
+.form>h3{
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.form>.submit{
+    width: 200px;
+    margin: 0 auto;
+    margin-left: 50px;
+    background-color: rgb(236, 148, 148);
+    border: 4px solid rgb(236, 148, 148);
+    margin-top: 20px;
+}
+.forgot{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+
+/* success css*/
+.success{
+    max-width: 200px;
+    height: 200px;
+    background-color: rgb(219, 214, 224);
+    margin: 4rem auto;
+    border-radius: 10px;
+    border: 3px outset aliceblue;
+    text-align: center;
+}.success>h3,p{
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+.success>form>button{
+    background-color: rgb(236, 148, 148);
+    border:4px solid rgb(236, 148, 148);
+    border-radius: 4px;
+}
+@media screen  and (max-width:650px){
+   
+    .login{
+        width: 200px;
+        height: 170px;
+        background-color: white;
+        margin: 1.5rem auto;
+        border-radius: 5px;
+        border: 1px outset aliceblue;
+    }
+    .form{
+        width: 200px;
+        height: 10px;
+        margin: 0 auto;
+        background-color: white;
+    
+    }
+    .form>input{
+        margin: 0.1rem 0.1rem;
+        width: 200px;
+        height: 20px;
+        border: 2px groove aliceblue;
+        border-radius: 2px;
+    
+    }
+    .form>input,label{
+    
+        margin: 0.1rem 0.1rem;
+        width: 180px;
+        height: 20px;
+    
+    }
+    .form>h3{
+        margin-bottom: 8px;
+        margin-top: 15px;
+    }
+    .form>.submit{
+        width: 100px;
+        margin: 0 auto;
+        margin-left: 50px;
+        background-color: rgb(236, 148, 148);
+        border: 4px solid rgb(236, 148, 148);
+        margin-top: 10px;
+    }
+    
+    /* success css*/
+    .success{
+        max-width: 200px;
+        height: 200px;
+        background-color: rgb(193, 250, 193);
+        margin: 4rem auto;
+        border-radius: 10px;
+        border: 3px outset aliceblue;
+        text-align: center;
+    }.success>h3,p{
+        margin-bottom: 30px;
+        margin-top: 10px;
+    }
+    .success>form>button{
+        background-color: rgb(236, 148, 148);
+        border:4px solid rgb(236, 148, 148);
+        border-radius: 4px;
+    }
+}
