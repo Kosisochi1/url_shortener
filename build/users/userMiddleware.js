@@ -19,7 +19,7 @@ function validateUser(req, res, next) {
         try {
             const schema = joi_1.default.object({
                 Name: joi_1.default.string().required().alphanum().min(4).max(20),
-                Email: joi_1.default.string().required().email().required(),
+                Email: joi_1.default.string().required().required(),
                 Password: joi_1.default.string().min(4).max(15).required(),
                 verificationToken: joi_1.default.string(),
                 isVerified: joi_1.default.boolean()
@@ -37,7 +37,7 @@ function validateLogin(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const schema = joi_1.default.object({
-                Email: joi_1.default.string().required().email(),
+                Email: joi_1.default.string().required(),
                 Password: joi_1.default.string().required()
             });
             yield schema.validateAsync(req.body, { abortEarly: true });

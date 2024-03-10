@@ -51,10 +51,10 @@ const authenticate = async (req:any, res:any, next:NextFunction) => {
 	logger.info('[check]=> Available  Cookies  ');
 
     const token = req.cookies.jwt;
+    try {
 	if (token) {
 		logger.info('[Cookies]=> Available    ');
 
-		try {
 			logger.info('[Auth Process]=> started    ');
 
 			const decodeValue = await jwt.verify(token, secrete_key);
@@ -62,14 +62,16 @@ const authenticate = async (req:any, res:any, next:NextFunction) => {
 			logger.info('[Auth Process]=> completed    ');
 
 			next();
-		} catch (error) {
-			logger.info('[Auth Process]=> Server Error    ');
+    } else {
+        return res.status(401).json({massage:'Not Authorize'})
+        }
+    } catch (error) {
+        logger.info('[Auth Process]=> Server Error    ');
 
-			return res.status(500).json({
-				massage: 'Server',
-			});
-		}
-	}
+        return res.status(500).json({
+            massage: 'Server',
+        });
+    }
 };
 
  export default {authenticateUser,authenticate}

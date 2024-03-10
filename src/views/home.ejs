@@ -9,11 +9,25 @@
 	</head>
 	<body>
 		<header><%- include('./partials/headers'); %></header>
-		<main class="main">
-			<h2>Today's Quote</h2>
-			<p class="quote"></p>
+		<h1 class="h-home">Short URL</h1>
+		<main class="home">
+			<div class="form-home">
+				<form action="/short_url" method="post" class="form">
+					<label for="Long_url">Long URL</label><br />
+					<input type="text" id="Long_url" name="Long_url" value="" /><br />
 
-			<div class="list"></div>
+					<label for="Custom_url">Custom Url</label><br />
+					<input type="text" id="Custom_url" name="Custom_url" value="" /><br />
+					<input class="submit" type="submit" value="SUBMIT" />
+				</form>
+			</div>
+			<div class="for">
+				<h4>URL shortener</h4>
+				<p>
+					Create your short Url with S-Url.Short your Urls View your Short Url
+					History. Track your Short Url
+				</p>
+			</div>
 		</main>
 
 		<%- include('./partials/footer'); %>

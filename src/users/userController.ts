@@ -1,10 +1,10 @@
-// import express, {Express, req: Request, res: Response } from "express"
+
 import * as dotenv from "dotenv"
 import UserModel from "../model/userModel"
 import jwt from "jsonwebtoken"
 dotenv.config({ path: __dirname + '/./../../.env' })
 import crypto from "crypto"
-import { date, object } from "joi"
+import { date, object, string } from "joi"
 import { mailSender,sendVerification,passwordReset } from "../utils/mailling"
 import { logger } from "../logger"
 import bcrypt, { hash } from "bcrypt";
@@ -13,22 +13,7 @@ import mongoose from "mongoose"
 
 
 
-interface Iuser extends Document{
-    Name: string,
-    Email: string,
-    Password: string,
-    verificationToken: string,
-    isVerified: boolean,
-    verifiedDate: Date,
-    passwordToken:string,
-    passwordTokenExpDate: Date,
-    
-    // isValidPassword():string
-}
-interface UserMode extends mongoose.Model<Iuser>{
-    isValidPassword(Password: string, hashPassword: string): Promise<boolean>;
 
-}
 
 interface CustomRequest extends Request{
     userExist: Request
@@ -83,7 +68,7 @@ const createUser = async (req:any,res:any) => {
 
         logger.info('[Verification Mail ]=> Sent    ');
 
-        return res.status(201).json({massage:' User Created, Check  your Mail and Verify',data:{token,newUser}})
+        return res.status(201).json({massage:' User Created, Check  your Mail and Verify',data:{token}})
         
         
         
@@ -208,34 +193,40 @@ async function login(req:any, res:any) {
      
    
     try {
-        const { Email, Password }= req.body
+        // const { Email, Password }= req.body
         logger.info('[ Login Process]=> started    ');
 
-         const userExit:any = await UserModel.findOne({ Email: Email })
-         
+        const userExit:any = await UserModel.findOne({ Email: req.body.Email })
         
-         
+        
+        
         if (!userExit) {
-            return res.status(404).json({ massage: 'Not Matched User' })
-         }
+            return res.status(404).json({ massage: 'Not  User Matched' })
+
+        }
+        logger.info('[ Login Process]=> User Exist    ');
+
         
         
+        
+        const validaUser =  await userExit.isValidPassword(req.body.Password)
+        
+        console.log(validaUser)
+        if (!validaUser) {
             
-         const validaUser =  await userExit.isValidPassword(Password)
-         console.log(validaUser)
-         
-         if (!validaUser) {
-                
-                return res.status(422).json({ massage: 'Not Matched User' })
-                }
-            
+            return res.status(422).json({ massage: 'Not Matched User' })
+        }
+        
+        logger.info('[ Login Process]=> Valid Password    ');
+
         
         
-       
         if (userExit.isVerified == false) {
             return res.status(401).json({ massage: 'User not verified'})
-                
-            }
+            
+        }        logger.info('[ Login Process]=> User nott verified    ');
+
+        console.log(userExit.isVerified)
         
         const token = jwt.sign({ Email: userExit.Email, _id: userExit._id }, secrete_key, { expiresIn: '1h' })
 
@@ -253,12 +244,16 @@ async function login(req:any, res:any) {
      } catch (error) {
         logger.info('[Server Error ]=> Login    ');
 
-        return res.status(500).json({ massage: ' Server Error'})
+        return res.status(500).json({ massage: '  login Server Error'})
        
     }
 }
-export default {createUser,login,verifyMail,forgot_password,resetPassword}
+export default {
+    createUser,
+    login,
+    verifyMail,
+    forgot_password,
+    resetPassword
+}
 
-// function userExitisValidPassword(Password: string) {
-//     throw new Error("Function not implemented.")
-// }
+

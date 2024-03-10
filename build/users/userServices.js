@@ -43,6 +43,7 @@ dotenv.config({ path: __dirname + '/./../../.env' });
 const crypto_1 = __importDefault(require("crypto"));
 const mailling_1 = require("../utils/mailling");
 const logger_1 = require("../logger");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const secrete_key = process.env.SECRETE_KEY;
 const createUser = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -80,7 +81,7 @@ const createUser = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
         return {
             massage: ' User Created, Check  your Mail and Verify',
             code: 201,
-            data: { token, newUser }
+            data: { token }
         };
     }
     catch (error) {
@@ -127,10 +128,10 @@ const verifyMail = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
 function forgot_password(reqBody) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            if (!reqBody.Email) {
+            if (!reqBody) {
                 return { massage: 'Enter Valid Mail', code: 404 };
             }
-            const user = yield userModel_1.default.findOne({ Email: reqBody.Email });
+            const user = yield userModel_1.default.findOne({ Email: reqBody });
             if (user) {
                 const passwordToken = crypto_1.default.randomBytes(16).toString("hex");
                 const origin = 'http://localhost:4500';
@@ -142,18 +143,18 @@ function forgot_password(reqBody) {
                     to: user.Email,
                     subject: ' Mail Verification',
                     html: ` <h4>Hi ${user.Name}</h4> </br>
-                <p>Please verify your mail!!!  <a href="${origin}/user/forget_password?passwordToken=${user.passwordToken}&Email=${user.Email}"> Click Reset Password</a></p>`
+                <p>Please verify your Account!!!  <a href="${origin}/reset_password?passwordToken=${user.passwordToken}&Email=${user.Email}"> Click Reset Password</a></p>`
                 });
                 const tenMinutes = 1000 * 60 * 10;
                 const passwordTokenExpDate = new Date(Date.now() + tenMinutes);
                 user.passwordToken = passwordToken;
                 user.passwordTokenExpDate = passwordTokenExpDate;
                 user.save();
+                return {
+                    massage: 'Check Your Mail for Reset Link',
+                    code: 200
+                };
             }
-            return {
-                massage: 'Check Your Mail for Reset Link',
-                code: 200
-            };
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Forgot Password    ');
@@ -164,15 +165,24 @@ function forgot_password(reqBody) {
         }
     });
 }
-function resetPassword(reqBody, reqQuery) {
+function resetPassword(reqBody) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const timeNow = Date.now();
-            const newPassword = yield userModel_1.default.findOne({ Email: reqQuery });
-            if (newPassword.Email == reqQuery && newPassword.passwordTokenExpDate > timeNow) {
-                // newPassword.Password = reqBody
-                newPassword.passwordTokenExpDate = new Date();
-                newPassword.passwordToken = '';
+            const timeNow = new Date();
+            const newPassword = yield userModel_1.default.findOne({ Email: reqBody.Email });
+            console.log(newPassword);
+            if (!newPassword) {
+                return {
+                    massage: 'No User Matched',
+                    code: 404
+                };
+            }
+            if (newPassword.Email === reqBody.Email && newPassword.passwordTokenExpDate > timeNow) {
+                const saltRounds = 10;
+                const hashedPassword = yield bcrypt_1.default.hash(reqBody.Password, saltRounds);
+                newPassword.Password = hashedPassword;
+                newPassword.passwordTokenExpDate = null;
+                newPassword.passwordToken = null;
                 newPassword.save();
             }
             return {
@@ -182,7 +192,7 @@ function resetPassword(reqBody, reqQuery) {
             };
         }
         catch (error) {
-            logger_1.logger.info('[Server Error ]=> Reser Password    ');
+            logger_1.logger.info('[Server Error ]=> Reset Password    ');
             return {
                 massage: ' Server Error',
                 code: 500
@@ -190,18 +200,18 @@ function resetPassword(reqBody, reqQuery) {
         }
     });
 }
-function login(reqBody) {
+function login(reqBody, reqBody2) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             logger_1.logger.info('[ Login Process]=> started    ');
-            const userExit = yield userModel_1.default.findOne({ Email: reqBody.Email });
+            const userExit = yield userModel_1.default.findOne({ Email: reqBody });
             if (!userExit) {
                 return {
-                    massage: 'Not Matched User',
+                    massage: 'Not User matched',
                     code: 404
                 };
             }
-            const validaUser = userExit.isValidPassword(reqBody.Password, userExit.Password);
+            const validaUser = yield userExit.isValidPassword(reqBody2);
             console.log(validaUser);
             if (!validaUser) {
                 return {
@@ -235,7 +245,10 @@ function login(reqBody) {
         }
     });
 }
-exports.default = { createUser, login, verifyMail, forgot_password, resetPassword };
-// function userExitisValidPassword(Password: string) {
-//     throw new Error("Function not implemented.")
-// }
+exports.default = {
+    createUser,
+    login,
+    verifyMail,
+    forgot_password,
+    resetPassword
+};

@@ -14,7 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const UserSchema = new mongoose_1.default.Schema({
+// interface UserMode extends mongoose.Model<Iuser>{
+//     isValidPassword(Password: string): Promise<boolean>;
+// }
+const Schema = mongoose_1.default.Schema;
+const UserSchema = new Schema({
     Name: {
         type: String,
         require: true
@@ -26,6 +30,10 @@ const UserSchema = new mongoose_1.default.Schema({
     Password: {
         type: String,
         require: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
     },
     verificationToken: {
         type: String,
@@ -55,7 +63,7 @@ UserSchema.pre('save', function (next) {
         try {
             const saltRounds = 10;
             const hash = yield bcrypt_1.default.hash(user.Password, saltRounds);
-            user.Password = hash;
+            this.Password = hash;
             next();
         }
         catch (error) {
@@ -63,10 +71,10 @@ UserSchema.pre('save', function (next) {
         }
     });
 });
-UserSchema.methods.isValidPassword = function (Password) {
+UserSchema.methods.isValidPassword = function (PasswordEntry) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = this;
-        return yield bcrypt_1.default.compare(Password, this.P);
+        // const user:any = this
+        return yield bcrypt_1.default.compare(PasswordEntry, this.Password);
     });
 };
 const UserModel = mongoose_1.default.model('user', UserSchema);

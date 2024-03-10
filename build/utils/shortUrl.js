@@ -17,11 +17,12 @@ const crypto_1 = __importDefault(require("crypto"));
 function url_short(reqBody) {
     return __awaiter(this, void 0, void 0, function* () {
         const uKey = crypto_1.default.randomBytes(4).toString('hex').slice(0, 7);
-        if (reqBody == '') {
-            return uKey;
+        // /s/s.com
+        if (reqBody !== '') {
+            return `/s.com/${reqBody}/${uKey}`;
         }
         else {
-            return reqBody;
+            return `/s.com/${uKey}`;
         }
     });
 }

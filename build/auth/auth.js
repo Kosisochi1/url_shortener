@@ -77,21 +77,24 @@ function authenticateUser(req, res, next) {
 const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     logger_1.logger.info('[check]=> Available  Cookies  ');
     const token = req.cookies.jwt;
-    if (token) {
-        logger_1.logger.info('[Cookies]=> Available    ');
-        try {
+    try {
+        if (token) {
+            logger_1.logger.info('[Cookies]=> Available    ');
             logger_1.logger.info('[Auth Process]=> started    ');
             const decodeValue = yield jsonwebtoken_1.default.verify(token, secrete_key);
             res.locals.loginUser = decodeValue;
             logger_1.logger.info('[Auth Process]=> completed    ');
             next();
         }
-        catch (error) {
-            logger_1.logger.info('[Auth Process]=> Server Error    ');
-            return res.status(500).json({
-                massage: 'Server',
-            });
+        else {
+            return res.status(401).json({ massage: 'Not Authorize' });
         }
+    }
+    catch (error) {
+        logger_1.logger.info('[Auth Process]=> Server Error    ');
+        return res.status(500).json({
+            massage: 'Server',
+        });
     }
 });
 exports.default = { authenticateUser, authenticate };

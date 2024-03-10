@@ -23,7 +23,6 @@ const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-// const redis = new Redis()
 const port = process.env.PORT;
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -32,12 +31,14 @@ app.use('/public', express_1.default.static(path_1.default.join(__dirname, 'publ
 app.use('/public', express_1.default.static(path_1.default.join(__dirname, 'reset.html')));
 app.set('views', path_1.default.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('Welcome to Url Shortrner');
-}));
 app.use('/user', userRoute_1.default);
 app.use('/s', urlRoute_1.default);
 app.use('/', viewRouter_1.default);
+userRoute_1.default.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render('index', {
+        loginUser: res.locals.loginUser || null,
+    });
+}));
 app.get('*', (req, res) => {
     res.status(404).json({
         data: null,

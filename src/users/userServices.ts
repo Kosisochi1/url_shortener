@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 dotenv.config({ path: __dirname + '/./../../.env' })
 import crypto from "crypto"
 import { date, object } from "joi"
-import { mailSender,sendVerification,passwordReset } from "../utils/mailling"
+import { mailSender, sendVerification, passwordReset } from "../utils/mailling"
 import { logger } from "../logger"
 import bcrypt, { hash } from "bcrypt";
 
@@ -88,7 +88,7 @@ console.log(reqBody.Password)
         return {
             massage: ' User Created, Check  your Mail and Verify',
             code: 201,
-            data:{token,newUser}
+            data:{token}
         }
     } catch (error) {
         logger.info('[Server Error ]=> Create User    ');
@@ -139,10 +139,10 @@ const verifyMail = async (reqBody: any) => {
 
 async function forgot_password(reqBody: any) {
     try {
-        if (!reqBody.Email) {
+        if (!reqBody) {
             return {massage : 'Enter Valid Mail',code :404}
         }
-        const user:any = await UserModel.findOne({ Email: reqBody.Email })
+        const user:any = await UserModel.findOne({ Email: reqBody })
         
         if (user) {
             const passwordToken = crypto.randomBytes(16).toString("hex")
@@ -156,7 +156,7 @@ async function forgot_password(reqBody: any) {
                 to: user.Email,
                 subject: ' Mail Verification',
                     html: ` <h4>Hi ${user.Name}</h4> </br>
-                <p>Please verify your mail!!!  <a href="${origin}/user/forget_password?passwordToken=${user.passwordToken}&Email=${user.Email}"> Click Reset Password</a></p>`
+                <p>Please verify your Account!!!  <a href="${origin}/reset_password?passwordToken=${user.passwordToken}&Email=${user.Email}"> Click Reset Password</a></p>`
             })
     
             const tenMinutes = 1000 * 60 * 10
@@ -170,10 +170,10 @@ async function forgot_password(reqBody: any) {
             
     
             
-        }
-        return {
-            massage: 'Check Your Mail for Reset Link',
-            code : 200
+            return {
+                massage: 'Check Your Mail for Reset Link',
+                code : 200
+            }
         }
         
     } catch (error) {
@@ -186,14 +186,26 @@ async function forgot_password(reqBody: any) {
         
     }
 }
-async function resetPassword(reqBody: any,reqQuery:any) {
+async function resetPassword(reqBody: any) {
     try {
-        const timeNow = Date.now()
-        const newPassword: any = await UserModel.findOne({ Email: reqQuery })
-        if (newPassword.Email == reqQuery &&  newPassword.passwordTokenExpDate> timeNow) {
-            // newPassword.Password = reqBody
-            newPassword.passwordTokenExpDate = new Date()
-            newPassword.passwordToken = ''
+        const timeNow = new Date()
+        const newPassword: any = await UserModel.findOne({ Email: reqBody.Email })
+        console.log(newPassword)
+        if (!newPassword) {
+            return {
+                massage: 'No User Matched',
+                code:404
+            }
+        }
+
+        if (newPassword.Email === reqBody.Email && newPassword.passwordTokenExpDate > timeNow) {
+            
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(reqBody.Password, saltRounds)
+
+            newPassword.Password = hashedPassword
+            newPassword.passwordTokenExpDate = null
+            newPassword.passwordToken = null
             newPassword.save()
             
         }
@@ -204,7 +216,7 @@ async function resetPassword(reqBody: any,reqQuery:any) {
         }
         
     } catch (error) {
-        logger.info('[Server Error ]=> Reser Password    ');
+        logger.info('[Server Error ]=> Reset Password    ');
 
         return {
             massage: ' Server Error',
@@ -215,27 +227,27 @@ async function resetPassword(reqBody: any,reqQuery:any) {
     
 }
 
-async function login(reqBody: Iuser) {
+async function login(reqBody: any,reqBody2:any) {
     
      
    
      try {
         logger.info('[ Login Process]=> started    ');
 
-         const userExit:any = await UserModel.findOne({ Email: reqBody.Email })
+         const userExit:any = await UserModel.findOne({ Email: reqBody })
          
         
          
         if (!userExit) {
             return { 
-                massage: 'Not Matched User',
+                massage: 'Not User matched',
                 code :404
             }
          }
         
         
             
-         const validaUser =   userExit.isValidPassword(reqBody.Password,userExit.Password)
+         const validaUser =  await userExit.isValidPassword(reqBody2)
          console.log(validaUser)
          
          if (!validaUser) {
@@ -278,8 +290,12 @@ async function login(reqBody: Iuser) {
        }
     }
 }
-export default {createUser,login,verifyMail,forgot_password,resetPassword}
+export default {
+    createUser,
+    login,
+    verifyMail,
+    forgot_password,
+    resetPassword
+}
 
-// function userExitisValidPassword(Password: string) {
-//     throw new Error("Function not implemented.")
-// }
+

@@ -40,6 +40,13 @@ const UrlSchema = new mongoose_1.Schema({
         type: String,
         // require:true
     },
+    Short_url_link: {
+        type: String
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
     Url_click_count: {
         type: Number,
         default: 0

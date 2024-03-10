@@ -35,7 +35,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import express, {Express, req: Request, res: Response } from "express"
 const dotenv = __importStar(require("dotenv"));
 const userModel_1 = __importDefault(require("../model/userModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -74,7 +73,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             <p>Please verify your mail!!!  <a href="${origin}/verify_email?verificationToken=${newUser.verificationToken}&Email=${newUser.Email}">here</a></p>`
         });
         logger_1.logger.info('[Verification Mail ]=> Sent    ');
-        return res.status(201).json({ massage: ' User Created, Check  your Mail and Verify', data: { token, newUser } });
+        return res.status(201).json({ massage: ' User Created, Check  your Mail and Verify', data: { token } });
     }
     catch (error) {
         logger_1.logger.info('[Server Error ]=> Create User    ');
@@ -167,20 +166,24 @@ function resetPassword(req, res) {
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { Email, Password } = req.body;
+            // const { Email, Password }= req.body
             logger_1.logger.info('[ Login Process]=> started    ');
-            const userExit = yield userModel_1.default.findOne({ Email: Email });
+            const userExit = yield userModel_1.default.findOne({ Email: req.body.Email });
             if (!userExit) {
-                return res.status(404).json({ massage: 'Not Matched User' });
+                return res.status(404).json({ massage: 'Not  User Matched' });
             }
-            const validaUser = yield userExit.isValidPassword(Password);
+            logger_1.logger.info('[ Login Process]=> User Exist    ');
+            const validaUser = yield userExit.isValidPassword(req.body.Password);
             console.log(validaUser);
             if (!validaUser) {
                 return res.status(422).json({ massage: 'Not Matched User' });
             }
+            logger_1.logger.info('[ Login Process]=> Valid Password    ');
             if (userExit.isVerified == false) {
                 return res.status(401).json({ massage: 'User not verified' });
             }
+            logger_1.logger.info('[ Login Process]=> User nott verified    ');
+            console.log(userExit.isVerified);
             const token = jsonwebtoken_1.default.sign({ Email: userExit.Email, _id: userExit._id }, secrete_key, { expiresIn: '1h' });
             logger_1.logger.info('[ Login Process]=> Completed    ');
             return res.status(200).json({ massage: 'Login Successful', data: {
@@ -191,11 +194,14 @@ function login(req, res) {
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Login    ');
-            return res.status(500).json({ massage: ' Server Error' });
+            return res.status(500).json({ massage: '  login Server Error' });
         }
     });
 }
-exports.default = { createUser, login, verifyMail, forgot_password, resetPassword };
-// function userExitisValidPassword(Password: string) {
-//     throw new Error("Function not implemented.")
-// }
+exports.default = {
+    createUser,
+    login,
+    verifyMail,
+    forgot_password,
+    resetPassword
+};

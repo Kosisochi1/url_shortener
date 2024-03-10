@@ -19,30 +19,6 @@ import Cache from '../cach/cache'
 
 
 
-
-interface IUrl extends Document{
-    Long_url: any,
-    Custom_url: string,
-    Qr_code: any,
-    Short_url: string,
-    Url_click_count: number,
-    Click_by: any,
-    Date_clicked: Date,
-    User_agent: string,
-    User_id:Types.ObjectId
-}
-// declare global {
-//     namespace Express{
-//         interface Request{
-//             userExist:IUrl
-//         }
-//     }
-// }
-
-
-
-
-
 const createShortUrl = async (req: any, res:any) => {
     try {
         const { Long_url,Custom_url }= req.body
@@ -51,28 +27,13 @@ const createShortUrl = async (req: any, res:any) => {
     const shortUrlGen = await url_short(Custom_url)
     logger.info('[Short Url Genareted ]=>  Genareted    ');
 
-    const data = {
-        frame_name: 'no-frame',
-		qr_code_text: shortUrlGen,
-		image_format: 'SVG',
-		qr_code_logo: 'scan-me-square',
-	};
+    const shortUrl =`http://localhost:4500${shortUrlGen}`
+    const options = `http://api.qrserver.com/v1/create-qr-code/?data=${shortUrl}&size=100x100`
+    logger.info('[Qr Code  process]=>  Started    ')
 
-	const options = {
-		method: 'POST',
-		url: 'https://api.qr-code-generator.com/v1/create?access-token=k11u-0kcrtKLiXkpPEZnnNUH9RTpYxOOwxf8_zL52Jx2LzVjxvOaiD2lXyc69TMf',
-
-		headers: {
-			'content-type': 'application/json',
-		},
-		data: data,
-        };
         
-        logger.info('[Qr Code  process]=>  Started    ');
-
-		const response = await axios.request<AxiosResponse>(options);
 		
-    const QR_code = response.data
+    const QR_code = options
     logger.info('[QR Code  ]=>  Genareted    ');
 
 	
@@ -92,7 +53,7 @@ const createShortUrl = async (req: any, res:any) => {
         if (url_exist) {
             logger.info('[Long Url  ]=>  Exist    ');
 
-            return res.status(401).json( {
+            return res.status(409).json( {
                 massage: 'short url exist',
             })
         }
@@ -104,6 +65,8 @@ const createShortUrl = async (req: any, res:any) => {
             Qr_code: QR_code,
            
             Short_url: shortUrlGen,
+                        Short_url_link:shortUrl,
+
             User_id:req.userExist._id
             
             
@@ -113,7 +76,9 @@ const createShortUrl = async (req: any, res:any) => {
 
         return res.status(201).json({
             massage:'Short Url',
-            data:`http://localhost:4500/s/s.com/${short_url.Short_url}`
+            data:{Short_url_link:short_url.Short_url_link,Long_url:short_url.Long_url,qRcode:short_url.Qr_code}
+
+           
         })
 
     } catch (error) {
@@ -151,7 +116,7 @@ async function redirectShortUrl(req: any, res: any) {
         const goto = `http://${getShortUrl?.Long_url}`
          Cache.set(dKey,goto,24*60*60)
        
-       return res.status(200).redirect(goto)
+       return res.status(308).redirect(goto)
         
      } catch (error) {
         logger.info('[Server Error ]=> Redirecte Url    ');
@@ -176,7 +141,7 @@ async function historyList(req: any,res:any) {
 
         const history = await UrlModel.find({ User_id: req.userExist._id })
     if (history.length<=0) {
-        return res.status(422).json({
+        return res.status(404).json({
             massage: 'No record found',
         })
         }
@@ -206,7 +171,7 @@ async function editUrl(req: any, res: any) {
     try {
         const findUrl = await UrlModel.findOne({Short_url:req.params.id })
         if (!findUrl) {
-            return res.status(401).json({massage:'Not Found'})
+            return res.status(404).json({massage:'Not Found'})
         }
         const updatedUrl = await UrlModel.updateOne({_id:findUrl._id},{Long_url:req.body.Long_url})
         logger.info('[Edit Url  Process ]=>  Completed    ');
@@ -235,13 +200,19 @@ async function deleteAll(req: any,res:any) {
         logger.info('[Delete Url  Process ]=>  Started    ');
 
         const deleteList = await UrlModel.deleteMany({ User_id: req.userExist._id })
+        if (deleteList) {
+            
+            logger.info('[Delete Url  Process ]=>  Completed    ');
+    
+        return  res.status(200).json( {
+            massage: 'Delete List',
+            data:deleteList
+        })
+        } else {
+            return res.status(404).json({                massage: 'No Record Found',
+        })
+        }
         
-        logger.info('[Delete Url  Process ]=>  Completed    ');
-
-    return  res.status(200).json( {
-        massage: 'Delete List',
-        data:deleteList
-    })
     
     } catch (error) {
         logger.info('[Server Error ]=> Delete Url ');
@@ -258,11 +229,17 @@ async function deleteOne(req:any,res:any) {
         logger.info('[Delete One Url  Process ]=>  Started    ');
 
         const deleteItem = await UrlModel.deleteOne({ _id: req.params._id })
+        if (deleteItem) {
+            
+            logger.info('[Delete One Url  Process ]=>  Completed    ');
     
-        logger.info('[Delete One Url  Process ]=>  Completed    ');
-
-    return res.status(200).json( {
-        massage: 'Item Deleted',})
+        return res.status(200).json( {
+            massage: 'Item Deleted',})
+        } else {
+            return res.status(404).json({                massage: 'No Record FOund',
+        })
+        }
+    
         
     } catch (error) {
         logger.info('[Server Error ]=> Delete One Url ');

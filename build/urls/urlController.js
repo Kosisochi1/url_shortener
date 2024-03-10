@@ -41,39 +41,18 @@ const urlModel_1 = __importDefault(require("../model/urlModel"));
 const validUrl_1 = require("../utils/validUrl");
 // import { qrCode } from "../utils/QrCode"
 const shortUrl_1 = require("../utils/shortUrl");
-const axios_1 = __importDefault(require("axios"));
 const logger_1 = require("../logger");
 const cache_1 = __importDefault(require("../cach/cache"));
-// declare global {
-//     namespace Express{
-//         interface Request{
-//             userExist:IUrl
-//         }
-//     }
-// }
 const createShortUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { Long_url, Custom_url } = req.body;
         logger_1.logger.info('[Short Url Creation process ]=>  Started    ');
         const shortUrlGen = yield (0, shortUrl_1.url_short)(Custom_url);
         logger_1.logger.info('[Short Url Genareted ]=>  Genareted    ');
-        const data = {
-            frame_name: 'no-frame',
-            qr_code_text: shortUrlGen,
-            image_format: 'SVG',
-            qr_code_logo: 'scan-me-square',
-        };
-        const options = {
-            method: 'POST',
-            url: 'https://api.qr-code-generator.com/v1/create?access-token=k11u-0kcrtKLiXkpPEZnnNUH9RTpYxOOwxf8_zL52Jx2LzVjxvOaiD2lXyc69TMf',
-            headers: {
-                'content-type': 'application/json',
-            },
-            data: data,
-        };
+        const shortUrl = `http://localhost:4500${shortUrlGen}`;
+        const options = `http://api.qrserver.com/v1/create-qr-code/?data=${shortUrl}&size=100x100`;
         logger_1.logger.info('[Qr Code  process]=>  Started    ');
-        const response = yield axios_1.default.request(options);
-        const QR_code = response.data;
+        const QR_code = options;
         logger_1.logger.info('[QR Code  ]=>  Genareted    ');
         (0, validUrl_1.checkUrl)(Long_url);
         logger_1.logger.info('[Long Url Validity  process ]=>  Started    ');
@@ -85,7 +64,7 @@ const createShortUrl = (req, res) => __awaiter(void 0, void 0, void 0, function*
         const url_exist = yield urlModel_1.default.findOne({ Long_url: Long_url });
         if (url_exist) {
             logger_1.logger.info('[Long Url  ]=>  Exist    ');
-            return res.status(401).json({
+            return res.status(409).json({
                 massage: 'short url exist',
             });
         }
@@ -94,12 +73,13 @@ const createShortUrl = (req, res) => __awaiter(void 0, void 0, void 0, function*
             Custom_url: Custom_url,
             Qr_code: QR_code,
             Short_url: shortUrlGen,
+            Short_url_link: shortUrl,
             User_id: req.userExist._id
         });
         logger_1.logger.info('[Short Url  process ]=>  Completed    ');
         return res.status(201).json({
             massage: 'Short Url',
-            data: `http://localhost:4500/s/s.com/${short_url.Short_url}`
+            data: { Short_url_link: short_url.Short_url_link, Long_url: short_url.Long_url, qRcode: short_url.Qr_code }
         });
     }
     catch (error) {
@@ -130,7 +110,7 @@ function redirectShortUrl(req, res) {
             logger_1.logger.info('[Redirect Url  process ]=>  COmpleted    ');
             const goto = `http://${getShortUrl === null || getShortUrl === void 0 ? void 0 : getShortUrl.Long_url}`;
             cache_1.default.set(dKey, goto, 24 * 60 * 60);
-            return res.status(200).redirect(goto);
+            return res.status(308).redirect(goto);
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Redirecte Url    ');
@@ -146,7 +126,7 @@ function historyList(req, res) {
             logger_1.logger.info('[Get all Url  History ]=>  Started    ');
             const history = yield urlModel_1.default.find({ User_id: req.userExist._id });
             if (history.length <= 0) {
-                return res.status(422).json({
+                return res.status(404).json({
                     massage: 'No record found',
                 });
             }
@@ -171,7 +151,7 @@ function editUrl(req, res) {
         try {
             const findUrl = yield urlModel_1.default.findOne({ Short_url: req.params.id });
             if (!findUrl) {
-                return res.status(401).json({ massage: 'Not Found' });
+                return res.status(404).json({ massage: 'Not Found' });
             }
             const updatedUrl = yield urlModel_1.default.updateOne({ _id: findUrl._id }, { Long_url: req.body.Long_url });
             logger_1.logger.info('[Edit Url  Process ]=>  Completed    ');
@@ -193,11 +173,17 @@ function deleteAll(req, res) {
         try {
             logger_1.logger.info('[Delete Url  Process ]=>  Started    ');
             const deleteList = yield urlModel_1.default.deleteMany({ User_id: req.userExist._id });
-            logger_1.logger.info('[Delete Url  Process ]=>  Completed    ');
-            return res.status(200).json({
-                massage: 'Delete List',
-                data: deleteList
-            });
+            if (deleteList) {
+                logger_1.logger.info('[Delete Url  Process ]=>  Completed    ');
+                return res.status(200).json({
+                    massage: 'Delete List',
+                    data: deleteList
+                });
+            }
+            else {
+                return res.status(404).json({ massage: 'No Record Found',
+                });
+            }
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Delete Url ');
@@ -212,10 +198,16 @@ function deleteOne(req, res) {
         try {
             logger_1.logger.info('[Delete One Url  Process ]=>  Started    ');
             const deleteItem = yield urlModel_1.default.deleteOne({ _id: req.params._id });
-            logger_1.logger.info('[Delete One Url  Process ]=>  Completed    ');
-            return res.status(200).json({
-                massage: 'Item Deleted',
-            });
+            if (deleteItem) {
+                logger_1.logger.info('[Delete One Url  Process ]=>  Completed    ');
+                return res.status(200).json({
+                    massage: 'Item Deleted',
+                });
+            }
+            else {
+                return res.status(404).json({ massage: 'No Record FOund',
+                });
+            }
         }
         catch (error) {
             logger_1.logger.info('[Server Error ]=> Delete One Url ');

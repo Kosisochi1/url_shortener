@@ -1,9 +1,6 @@
 import express, { Express, Request, Response,NextFunction } from "express";
 import dotenv from "dotenv";
 import { connect } from './db';
-// import user from "./users/userServices"
-// import user from "./users/userServices"
-
 import authenticateUser from './auth/auth'
 import router from "./users/userRoute";
 import urlRoute from "./urls/urlRoute";
@@ -16,7 +13,6 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app: Express = express();
-// const redis = new Redis()
 
 const port = process.env.PORT;
 app.use(express.json())
@@ -29,13 +25,17 @@ app.set('views',path.join(__dirname,'views'))
 
 app.set('view engine', 'ejs');
 
-app.get('/', async(req: Request, res: Response) => {
-	
-	res.send('Welcome to Url Shortrner');
-});
+
 app.use('/user', router)
 app.use('/s', urlRoute)
-app.use('/',viewRouter)
+app.use('/', viewRouter)
+
+
+router.get('/', async (req, res) => {
+	res.render('index', {
+		loginUser: res.locals.loginUser || null,
+	});
+});
 
 app.get('*', (req:Request, res:Response) => {
 	res.status(404).json({

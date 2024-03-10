@@ -5,7 +5,8 @@
   "main": "./build/api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./build/api.js",
+    "start": "node ./build/src/api.ts",
+    "start:main": "node ./build/api.js",
     "start:dev": "nodemon",
     "build": "rimraf ./build && tsc"
   },

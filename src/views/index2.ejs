@@ -11,12 +11,11 @@
 		<header><%- include('./partials/headers'); %></header>
 
 		<main class="success">
-			<h3>Wrong details!</h3>
-			<p>Please, check your mail and password</p>
+			<h3>Login and Continue</h3>
 
-			<form action="/login">
+			<form action="/login" method="get">
 				<button onclick="this.form.submit" name="continue" type="submit">
-					Try again
+					Continue
 				</button>
 			</form>
 		</main>

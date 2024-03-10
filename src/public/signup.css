@@ -19,6 +19,17 @@ body{
     border: 3px outset aliceblue;
     position: relative;
 }
+.analytic{
+    display: flex;
+    margin-block-start: 2rem;
+    margin-block-end: 2rem;
+    margin-inline-start: 2rem;
+    margin-inline-end: 2rem;
+    column-gap: 2rem;
+   
+    
+    
+}
 .form{
     width: 300px;
     height: 250px;
@@ -50,8 +61,8 @@ body{
     width: 150px;
     margin: 20px auto;
     margin-left: 70px;
-    background-color: rgb(236, 148, 148);
-    border: 4px solid rgb(236, 148, 148)
+    background-color: rgb(105, 161, 105);
+    border: 4px solid rgb(105, 161, 105)
 }
 .main{
     margin: 0 auto;
@@ -63,12 +74,45 @@ body{
     position: relative;
     
 }
-.quote{
-    margin-bottom: 2rem;
+/* Home */
+.home{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-block-start: 3rem;
+    margin-inline-start: 4rem;
+    margin-inline-end: 2rem;
 }
-.noBirthday{
-    margin-top: 4rem;
+.h-home{
+    margin-inline-start: 4rem;
+    margin-block-start: 2rem;
 }
+.form{
+    width: 24rem;
+    padding-inline-start: 2rem;
+    padding-block-start: 2rem;
+    border-radius: 4rem;
+}
+.home>.form-home{
+    width: 4rem;
+}
+.short_url{
+    width: 20rem;
+    padding-inline-start: 2rem;
+    padding-inline-end: 2rem;
+    padding-block-start: 2rem;
+    line-height: 1.5rem;
+    background-color: white;
+    border-radius: 2rem;
+
+}
+.short_url h3{
+    margin-block-start: 1rem;
+}
+.short_url img{
+    padding-block-start: 1.5rem;
+}
+
 
 
 @media screen  and (max-width:650px){
@@ -81,6 +125,16 @@ body{
         border-radius: 10px;
         border: 1px outset aliceblue;
         position: relative;
+    }
+    .analytic{
+        margin-block-start: 2rem;
+        margin-block-end: 2rem;
+        margin-inline-start: 2rem;
+        margin-inline-end: 2rem;
+        column-gap: 2rem;
+       
+        
+        
     }
     .form{
         width: 200px;
