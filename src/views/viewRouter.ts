@@ -129,7 +129,7 @@ router.get('/login', async(req, res) => {
 	res.render('login', { loginUser: res.locals.loginUser || null });
 });
 
-router.post('/login',validateLogin, async (req: Request, res: any) => {
+router.post('/login',validateLogin,limiter, async (req: Request, res: any) => {
 	
 	const loginUser = await userController.login(req.body.Email,req.body.Password)
 	console.log(req.body)
