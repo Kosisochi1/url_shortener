@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../public/signup.css" />
+
+		<title>Document</title>
+	</head>
+	<body>
+		<header><%- include('./partials/headers'); %></header>
+		<h1 class="h-home">Short URL</h1>
+		<main class="home">
+			<div class="short_url">
+				<h3>URL shortened</h3>
+				<h5>Long Link: <%= Data.Long_url%></h5>
+				<h5>Short Link: <%=Data.Short_url_link%></h5>
+				<h5>Visited: <%=Data.Url_click_count%></h5>
+				<h5>App: <%=Data.User_agent%></h5>
+				<h5>Created: <%=Data.createdAt%></h5>
+				<h5>Device: <%=Data.Click_by%></h5>
+				<!-- <img src="<%=Data.qRcode%>" alt="QR Code" /> -->
+			</div>
+		</main>
+
+		<%- include('./partials/footer'); %>
+	</body>
+</html>

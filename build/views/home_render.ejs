@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../public/signup.css" />
+
+		<title>Document</title>
+	</head>
+	<body>
+		<header><%- include('./partials/headers'); %></header>
+		<h1 class="h-home">Short URL</h1>
+		<main class="home">
+			<div class="form-home">
+				<form action="/short_url" method="post" class="form">
+					<label for="long">Long URL</label><br />
+					<input type="text" id="long" name="Long" value="" /><br />
+
+					<label for="custom">Custom Url</label><br />
+					<input type="text" id="custom" name="custom" value="" /><br />
+					<input class="submit" type="submit" value="SUBMIT" />
+				</form>
+			</div>
+			<div class="short_url">
+				<h3>URL shortened</h3>
+				<h5><%= Data.data.Long_url%></h5>
+				<h5><%=Data.data.Short_url_link%></h5>
+				<img src="<%=Data.data.qRcode%>" alt="QR Code" />
+			</div>
+		</main>
+
+		<%- include('./partials/footer'); %>
+	</body>
+</html>

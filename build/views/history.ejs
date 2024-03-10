@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../public/signup.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<header><%- include('./partials/headers'); %></header>
+
+		<main class="analytic">
+			<!-- <% Data.forEach(function(history){%>
+			<p><%= history %></p>
+
+			<%})%> -->
+
+			<%if(Data.length >= 0){%> <% Data.forEach(function(view_history){%>
+			<div class="short_url">
+				<p><strong>Long Link:</strong> <%= view_history.Long_url%></p>
+				<p><strong>Short Link: </strong><%= view_history.Short_url_link%></p>
+				<p><strong>Time Created:</strong><%= view_history.createdAt%></p>
+				<img src="<%=view_history.Qr_code%>" alt="QR Code" />
+
+				<form action="/deleteOne/<%= view_history._id%>" method="post">
+					<button type="submit" onclick="this.form.submit()">Delete</button>
+				</form>
+			</div>
+			<%})%> <%}%>
+
+			<form action="/delete" method="post">
+				<button
+					type="submit"
+					name="delete"
+					onsubmit="this.form.submit ()"
+					value="<%=Data.User_id%>">
+					Clear History
+				</button>
+			</form>
+		</main>
+		<footer><%- include('./partials/footer'); %></footer>
+	</body>
+</html>

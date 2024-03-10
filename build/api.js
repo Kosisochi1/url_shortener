@@ -20,10 +20,10 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 app.use('/public', express_1.default.static(path_1.default.join(__dirname, 'public')));
 app.use('/public', express_1.default.static(path_1.default.join(__dirname, 'reset.html')));
-// app.set('views',path.join(__dirname,'views'))
+app.set('views', path_1.default.join(__dirname, './views'));
 app.engine('ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
-app.set('views', path_1.default.join(__dirname, ''));
+// app.set('views', path.join(__dirname, ''));
 app.use('/user', userRoute_1.default);
 app.use('/s', urlRoute_1.default);
 app.use('/', viewRouter_1.default);

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../public/signup.css" />
+
+		<title>Document</title>
+	</head>
+	<body>
+		<header><%- include('./partials/headers'); %></header>
+		<h1 class="h-home">Short URL</h1>
+		<main class="home">
+			<div class="form-home">
+				<form action="/index2" method="get" class="form">
+					<label for="long">Long URL</label><br />
+					<input type="text" id="long" name="Long" value="" /><br />
+
+					<label for="custom">Custom Url</label><br />
+					<input type="text" id="custom" name="custom" value="" /><br />
+					<input class="submit" type="submit" value="SUBMIT" />
+				</form>
+			</div>
+			<div>
+				<h4>URL shortener</h4>
+				<p>
+					Create your short Url with S-Url.Short your Urls View your Short Url
+					History. Track your Short Url
+				</p>
+			</div>
+		</main>
+
+		<%- include('./partials/footer'); %>
+	</body>
+</html>
