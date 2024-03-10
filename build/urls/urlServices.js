@@ -46,7 +46,7 @@ const createShortUrl = (long_url, custom_url, userId) => __awaiter(void 0, void 
         logger_1.logger.info('[Short Url Creation process ]=>  Started    ');
         const shortUrlGen = yield (0, shortUrl_1.url_short)(custom_url);
         logger_1.logger.info('[Short Url Genareted ]=>  Genareted    ');
-        const shortUrl = `http://localhost:4500${shortUrlGen}`;
+        const shortUrl = `https://k-short-url.onrender.com${shortUrlGen}`;
         const options = `http://api.qrserver.com/v1/create-qr-code/?data=${shortUrl}&size=100x100`;
         logger_1.logger.info('[Qr Code  process]=>  Started    ');
         // const response = await axios.get<AxiosResponse>(options);

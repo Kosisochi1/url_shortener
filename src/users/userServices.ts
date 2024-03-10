@@ -70,7 +70,7 @@ console.log(reqBody.Password)
 
 
 
-        const origin = 'http://localhost:4500'
+        const origin = 'https://k-short-url.onrender.com'
         logger.info('[ Mail verification Process]=> started    ');
 
             sendVerification({
@@ -146,7 +146,7 @@ async function forgot_password(reqBody: any) {
         
         if (user) {
             const passwordToken = crypto.randomBytes(16).toString("hex")
-            const origin = 'http://localhost:4500'
+            const origin = 'https://k-short-url.onrender.com'
             logger.info('[ Mail verification Process]=> started    ');
     
                 passwordReset({

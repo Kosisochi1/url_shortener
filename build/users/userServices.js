@@ -66,7 +66,7 @@ const createUser = (reqBody) => __awaiter(void 0, void 0, void 0, function* () {
         });
         const token = jsonwebtoken_1.default.sign({ Email: newUser.Email, _id: newUser._id }, secrete_key);
         logger_1.logger.info('[Create User Process]=> completed    ');
-        const origin = 'http://localhost:4500';
+        const origin = 'https://k-short-url.onrender.com';
         logger_1.logger.info('[ Mail verification Process]=> started    ');
         (0, mailling_1.sendVerification)({
             name: newUser.Name,
@@ -134,7 +134,7 @@ function forgot_password(reqBody) {
             const user = yield userModel_1.default.findOne({ Email: reqBody });
             if (user) {
                 const passwordToken = crypto_1.default.randomBytes(16).toString("hex");
-                const origin = 'http://localhost:4500';
+                const origin = 'https://k-short-url.onrender.com';
                 logger_1.logger.info('[ Mail verification Process]=> started    ');
                 (0, mailling_1.passwordReset)({
                     name: user.Name,

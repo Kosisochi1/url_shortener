@@ -38,7 +38,7 @@ const createShortUrl = async (long_url: any,custom_url:any, userId: any) => {
     logger.info('[Short Url Genareted ]=>  Genareted    ');
 
     
-    const shortUrl =`http://localhost:4500${shortUrlGen}`
+    const shortUrl =`https://k-short-url.onrender.com${shortUrlGen}`
         const options = `http://api.qrserver.com/v1/create-qr-code/?data=${shortUrl}&size=100x100`
         logger.info('[Qr Code  process]=>  Started    ');
 
