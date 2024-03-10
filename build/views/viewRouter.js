@@ -40,6 +40,11 @@ router.get('/index2', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         loginUser: res.locals.loginUser || null,
     });
 }));
+router.get('/index', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render('index', {
+        loginUser: res.locals.loginUser || null,
+    });
+}));
 // signup
 router.get('/signup', (req, res) => {
     res.render('signup', { loginUser: res.locals.loginUser || null });

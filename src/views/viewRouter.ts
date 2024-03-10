@@ -32,6 +32,11 @@ router.get('/index2', async (req, res) => {
 		loginUser: res.locals.loginUser || null,
 	});
 });
+router.get('/index', async (req, res) => {
+	res.render('index', {
+		loginUser: res.locals.loginUser || null,
+	});
+});
 
 
 // signup
