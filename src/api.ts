@@ -31,11 +31,11 @@ app.use('/s', urlRoute)
 app.use('/', viewRouter)
 
 
-router.get('/', async (req, res) => {
-	res.render('index', {
-		loginUser: res.locals.loginUser || null,
-	});
-});
+// router.get('/', async (req, res) => {
+// 	res.render('index', {
+// 		loginUser: res.locals.loginUser || null,
+// 	});
+// });
 
 app.get('*', (req:Request, res:Response) => {
 	res.status(404).json({
