@@ -115,7 +115,7 @@ router.post('/forgot_password', async (req: any, res: any) => {
 
 
 router.post('/reset_password', async (req: any, res: any) => {
-	console.log(req.query)
+	// console.log(req.query)
 	const response = await userController.resetPassword({ Password: req.body.Password, Email: req.body.Email })
 	if (response.code === 404) {
 		res.render('404',{ loginUser: res.locals.loginUser || null })

@@ -171,6 +171,7 @@ body{
         border: 4px solid rgb(236, 148, 148)
     }
     .main{
+        display: block;
         margin: 0 auto;
         height: fit-content;
         text-align: center;
