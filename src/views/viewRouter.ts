@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 	});
 });
 router.get('/index2', async (req, res) => {
-	res.render('index2', {
+	res.render('dex2', {
 		loginUser: res.locals.loginUser || null,
 	});
 });
