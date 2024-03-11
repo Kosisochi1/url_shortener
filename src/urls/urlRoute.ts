@@ -17,7 +17,7 @@ const router = express.Router()
 
 
 
-router.post('/short_url', authenticateUser.authenticateUser,
+router.post('/short_url', authenticateUser.authenticate,
 ShortUrl.createShortUrl
 //     authenticateUser.authenticateUser, async (req: any, res: any) => {
 //     const createUrl = await ShortUrl.createShortUrl(req.body,     req.userExist._id
@@ -31,9 +31,9 @@ ShortUrl.createShortUrl
 
 
 
-router.get('/s.com/*',
-
-    ShortUrl.redirectShortUrl
+router.get('/s.com/:id',
+    authenticateUser.authenticate,
+    cacheMiddleWare,ShortUrl.redirectShortUrl
  
 )
 
@@ -42,14 +42,6 @@ router.get('/s.com/*',
 
 router.get('/history_list',
     authenticateUser.authenticateUser,ShortUrl.historyList
-   
-)
-router.get('/analytic',
-    authenticateUser.authenticateUser,ShortUrl.analytic
-   
-)
-router.get('/analytic/:id',
-    authenticateUser.authenticateUser,ShortUrl.analyticDetails
    
 )
 

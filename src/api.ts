@@ -27,14 +27,16 @@ app.set('view engine', 'ejs');
 // app.set('views', path.join(__dirname, ''));
 
 
-app.use('/user/v1/api', router)
-app.use('/url/v1/api', urlRoute)
-// app.use('/', viewRouter)
+app.use('/user', router)
+app.use('/s', urlRoute)
+app.use('/', viewRouter)
 
 
-app.get('/', async (req, res) => {
-	res.send('Shortener URL API');
-});
+// router.get('/', async (req, res) => {
+// 	res.render('index', {
+// 		loginUser: res.locals.loginUser || null,
+// 	});
+// });
 
 app.get('*', (req:Request, res:Response) => {
 	res.status(404).json({
