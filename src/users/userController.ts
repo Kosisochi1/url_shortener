@@ -161,14 +161,24 @@ async function forgot_password(req: any, res: any) {
     }
 }
 async function resetPassword(req: any, res: any) {
-    const { Password }= req.body
+    const { Password ,Email }= req.body
     try {
         const timeNow = Date.now()
-        const newPassword: any = await UserModel.findOne({ Email: req.query.Email })
-        if (newPassword.Email == req.query.Email &&  newPassword.passwordTokenExpDate < timeNow) {
-            newPassword.Password = Password
-            newPassword.passwordTokenExpDate = new Date()
-            newPassword.passwordToken = ''
+        const newPassword: any = await UserModel.findOne({ Email: Email })
+
+        if (!newPassword) {
+            return res.status(404).json({massage: 'No User Matched'})
+            
+        }
+
+
+
+        if (newPassword.Email == Email && newPassword.passwordTokenExpDate < timeNow) {
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(Password, saltRounds)
+            newPassword.Password = hashedPassword
+            newPassword.passwordTokenExpDate = null
+            newPassword.passwordToken = null
             newPassword.save()
             
             return res.status(200).json({

@@ -89,7 +89,7 @@ router.post('/forgot_password', (req, res) => __awaiter(void 0, void 0, void 0, 
     res.render('success', { loginUser: res.locals.loginUser || null });
 }));
 router.post('/reset_password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.query);
+    // console.log(req.query)
     const response = yield userServices_1.default.resetPassword({ Password: req.body.Password, Email: req.body.Email });
     if (response.code === 404) {
         res.render('404', { loginUser: res.locals.loginUser || null });
@@ -100,7 +100,7 @@ router.post('/reset_password', (req, res) => __awaiter(void 0, void 0, void 0, f
 router.get('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render('login', { loginUser: res.locals.loginUser || null });
 }));
-router.post('/login', userMiddleware_1.validateLogin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/login', userMiddleware_1.validateLogin, limiter, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const loginUser = yield userServices_1.default.login(req.body.Email, req.body.Password);
     console.log(req.body);

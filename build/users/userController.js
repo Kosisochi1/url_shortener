@@ -42,6 +42,7 @@ dotenv.config({ path: __dirname + '/./../../.env' });
 const crypto_1 = __importDefault(require("crypto"));
 const mailling_1 = require("../utils/mailling");
 const logger_1 = require("../logger");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const secrete_key = process.env.SECRETE_KEY;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -139,14 +140,19 @@ function forgot_password(req, res) {
 }
 function resetPassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { Password } = req.body;
+        const { Password, Email } = req.body;
         try {
             const timeNow = Date.now();
-            const newPassword = yield userModel_1.default.findOne({ Email: req.query.Email });
-            if (newPassword.Email == req.query.Email && newPassword.passwordTokenExpDate < timeNow) {
-                newPassword.Password = Password;
-                newPassword.passwordTokenExpDate = new Date();
-                newPassword.passwordToken = '';
+            const newPassword = yield userModel_1.default.findOne({ Email: Email });
+            if (!newPassword) {
+                return res.status(404).json({ massage: 'No User Matched' });
+            }
+            if (newPassword.Email == Email && newPassword.passwordTokenExpDate < timeNow) {
+                const saltRounds = 10;
+                const hashedPassword = yield bcrypt_1.default.hash(Password, saltRounds);
+                newPassword.Password = hashedPassword;
+                newPassword.passwordTokenExpDate = null;
+                newPassword.passwordToken = null;
                 newPassword.save();
                 return res.status(200).json({
                     massage: 'Reset completed',

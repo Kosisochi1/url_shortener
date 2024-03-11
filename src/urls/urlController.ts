@@ -27,7 +27,7 @@ const createShortUrl = async (req: any, res:any) => {
     const shortUrlGen = await url_short(Custom_url)
     logger.info('[Short Url Genareted ]=>  Genareted    ');
 
-    const shortUrl =`http://localhost:4500${shortUrlGen}`
+    const shortUrl =`http://localhost:4500/url/v1/api${shortUrlGen}`
     const options = `http://api.qrserver.com/v1/create-qr-code/?data=${shortUrl}&size=100x100`
     logger.info('[Qr Code  process]=>  Started    ')
 
@@ -90,8 +90,9 @@ const createShortUrl = async (req: any, res:any) => {
     }
 }
 async function redirectShortUrl(req: any, res: any) {
+    console.log(req.url)
     logger.info('[Redirect Url  process ]=>  Started    ');
-    const reqBody = req.params.id
+    const reqBody = req.url
     const reqParam = req.get('sec-ch-ua-platform')
     const reqParam2 = req.get('user-agent')
     const reqParam3 = req.url
@@ -114,7 +115,7 @@ async function redirectShortUrl(req: any, res: any) {
          logger.info('[Redirect Url  process ]=>  COmpleted    ');
 
         const goto = `http://${getShortUrl?.Long_url}`
-         Cache.set(dKey,goto,24*60*60)
+        //  Cache.set(dKey,goto,24*60*60)
        
        return res.status(308).redirect(goto)
         
@@ -162,6 +163,34 @@ async function historyList(req: any,res:any) {
     
   }
 }
+async function analytic(req: any,res:any) {
+    try {
+        logger.info('[Get all Url  History ]=>  Started    ');
+
+
+        const history = await UrlModel.find({ User_id: req.userExist._id })
+    if (history.length<=0) {
+        return res.status(404).json({
+            massage: 'No record found',
+        })
+        }
+        logger.info('[Get all Url  History ]=>  Completed    ');
+
+    
+    return  res.status(200).json( {
+        massage: 'short link List',
+        data:  history
+        })
+    
+    } catch (error) {
+        logger.info('[Server Error ]=> Url History     ');
+
+        return  res.status(500).json({
+			massage: 'Server Error',
+		});
+    
+  }
+}
 
 async function editUrl(req: any, res: any) {
     logger.info('[Edit Url  Process ]=>  Started    ');
@@ -169,7 +198,7 @@ async function editUrl(req: any, res: any) {
     // const { id } = req.params.id
     
     try {
-        const findUrl = await UrlModel.findOne({Short_url:req.params.id })
+        const findUrl = await UrlModel.findOne({_id:req.params.id })
         if (!findUrl) {
             return res.status(404).json({massage:'Not Found'})
         }
@@ -226,9 +255,10 @@ async function deleteAll(req: any,res:any) {
 
 async function deleteOne(req:any,res:any) {
     try {
+
         logger.info('[Delete One Url  Process ]=>  Started    ');
 
-        const deleteItem = await UrlModel.deleteOne({ _id: req.params._id })
+        const deleteItem = await UrlModel.deleteOne({ _id: req.params.id })
         if (deleteItem) {
             
             logger.info('[Delete One Url  Process ]=>  Completed    ');
@@ -251,6 +281,29 @@ async function deleteOne(req:any,res:any) {
         
     }
 }
+async function analyticDetails(req: any, res: any) {
+    try {
+        const findUrl = await UrlModel.findById({ _id: req.params.id })
+
+        if (findUrl) {
+            return res.status(200).json({massage: 'Url detail Information',
+            data: findUrl})
+                
+            
+        
+        } else {
+        
+            return res.status(409).json({massage: 'User Found'})
+            
+            
+        }
+    
+    } catch (error) {
+        return  res.status(409).json({massage: 'User Found'})
+        
+    
+    }
+}
 
 export default {
     createShortUrl,
@@ -258,5 +311,7 @@ export default {
     historyList,
     editUrl,
     deleteAll,
-    deleteOne
+    deleteOne,
+    analyticDetails,
+    analytic
 }

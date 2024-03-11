@@ -65,7 +65,7 @@ body{
 .success{
     max-width: 200px;
     height: 200px;
-    background-color: rgb(219, 214, 224);
+    background-color: white;
     margin: 4rem auto;
     border-radius: 10px;
     border: 3px outset aliceblue;
@@ -128,7 +128,7 @@ body{
     .success{
         max-width: 200px;
         height: 200px;
-        background-color: rgb(193, 250, 193);
+        background-color: white;
         margin: 4rem auto;
         border-radius: 10px;
         border: 3px outset aliceblue;

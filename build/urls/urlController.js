@@ -42,14 +42,13 @@ const validUrl_1 = require("../utils/validUrl");
 // import { qrCode } from "../utils/QrCode"
 const shortUrl_1 = require("../utils/shortUrl");
 const logger_1 = require("../logger");
-const cache_1 = __importDefault(require("../cach/cache"));
 const createShortUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { Long_url, Custom_url } = req.body;
         logger_1.logger.info('[Short Url Creation process ]=>  Started    ');
         const shortUrlGen = yield (0, shortUrl_1.url_short)(Custom_url);
         logger_1.logger.info('[Short Url Genareted ]=>  Genareted    ');
-        const shortUrl = `http://localhost:4500${shortUrlGen}`;
+        const shortUrl = `http://localhost:4500/url/v1/api${shortUrlGen}`;
         const options = `http://api.qrserver.com/v1/create-qr-code/?data=${shortUrl}&size=100x100`;
         logger_1.logger.info('[Qr Code  process]=>  Started    ');
         const QR_code = options;
@@ -91,8 +90,9 @@ const createShortUrl = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 function redirectShortUrl(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(req.url);
         logger_1.logger.info('[Redirect Url  process ]=>  Started    ');
-        const reqBody = req.params.id;
+        const reqBody = req.url;
         const reqParam = req.get('sec-ch-ua-platform');
         const reqParam2 = req.get('user-agent');
         const reqParam3 = req.url;
@@ -109,7 +109,7 @@ function redirectShortUrl(req, res) {
             }
             logger_1.logger.info('[Redirect Url  process ]=>  COmpleted    ');
             const goto = `http://${getShortUrl === null || getShortUrl === void 0 ? void 0 : getShortUrl.Long_url}`;
-            cache_1.default.set(dKey, goto, 24 * 60 * 60);
+            //  Cache.set(dKey,goto,24*60*60)
             return res.status(308).redirect(goto);
         }
         catch (error) {
@@ -144,12 +144,36 @@ function historyList(req, res) {
         }
     });
 }
+function analytic(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            logger_1.logger.info('[Get all Url  History ]=>  Started    ');
+            const history = yield urlModel_1.default.find({ User_id: req.userExist._id });
+            if (history.length <= 0) {
+                return res.status(404).json({
+                    massage: 'No record found',
+                });
+            }
+            logger_1.logger.info('[Get all Url  History ]=>  Completed    ');
+            return res.status(200).json({
+                massage: 'short link List',
+                data: history
+            });
+        }
+        catch (error) {
+            logger_1.logger.info('[Server Error ]=> Url History     ');
+            return res.status(500).json({
+                massage: 'Server Error',
+            });
+        }
+    });
+}
 function editUrl(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         logger_1.logger.info('[Edit Url  Process ]=>  Started    ');
         // const { id } = req.params.id
         try {
-            const findUrl = yield urlModel_1.default.findOne({ Short_url: req.params.id });
+            const findUrl = yield urlModel_1.default.findOne({ _id: req.params.id });
             if (!findUrl) {
                 return res.status(404).json({ massage: 'Not Found' });
             }
@@ -197,7 +221,7 @@ function deleteOne(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             logger_1.logger.info('[Delete One Url  Process ]=>  Started    ');
-            const deleteItem = yield urlModel_1.default.deleteOne({ _id: req.params._id });
+            const deleteItem = yield urlModel_1.default.deleteOne({ _id: req.params.id });
             if (deleteItem) {
                 logger_1.logger.info('[Delete One Url  Process ]=>  Completed    ');
                 return res.status(200).json({
@@ -217,11 +241,30 @@ function deleteOne(req, res) {
         }
     });
 }
+function analyticDetails(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const findUrl = yield urlModel_1.default.findById({ _id: req.params.id });
+            if (findUrl) {
+                return res.status(200).json({ massage: 'Url detail Information',
+                    data: findUrl });
+            }
+            else {
+                return res.status(409).json({ massage: 'User Found' });
+            }
+        }
+        catch (error) {
+            return res.status(409).json({ massage: 'User Found' });
+        }
+    });
+}
 exports.default = {
     createShortUrl,
     redirectShortUrl,
     historyList,
     editUrl,
     deleteAll,
-    deleteOne
+    deleteOne,
+    analyticDetails,
+    analytic
 };

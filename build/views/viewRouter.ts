@@ -115,7 +115,7 @@ router.post('/forgot_password', async (req: any, res: any) => {
 
 
 router.post('/reset_password', async (req: any, res: any) => {
-	console.log(req.query)
+	// console.log(req.query)
 	const response = await userController.resetPassword({ Password: req.body.Password, Email: req.body.Email })
 	if (response.code === 404) {
 		res.render('404',{ loginUser: res.locals.loginUser || null })
@@ -129,7 +129,7 @@ router.get('/login', async(req, res) => {
 	res.render('login', { loginUser: res.locals.loginUser || null });
 });
 
-router.post('/login',validateLogin, async (req: Request, res: any) => {
+router.post('/login',validateLogin,limiter, async (req: Request, res: any) => {
 	
 	const loginUser = await userController.login(req.body.Email,req.body.Password)
 	console.log(req.body)

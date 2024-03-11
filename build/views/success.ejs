@@ -8,9 +8,10 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<main class="success">
-			<h3>success!</h3>
-			<p>Your account has been created</p>
+		<header><%- include('./partials/headers'); %></header>
+
+		<main class="login">
+			<p>Your account</p>
 
 			<form action="/login">
 				<button onclick="this.form.submit" name="continue" type="submit">
@@ -18,5 +19,6 @@
 				</button>
 			</form>
 		</main>
+		<footer><%- include('./partials/footer'); %></footer>
 	</body>
 </html>
