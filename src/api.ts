@@ -29,14 +29,14 @@ app.set('view engine', 'ejs');
 
 app.use('/user', router)
 app.use('/s', urlRoute)
+// for service rendering in Ejs
+
 app.use('/', viewRouter)
 
 
-// router.get('/', async (req, res) => {
-// 	res.render('index', {
-// 		loginUser: res.locals.loginUser || null,
-// 	});
-// });
+router.get('/', async (req, res) => {
+	res.send('Short Url API' );
+});
 
 app.get('*', (req:Request, res:Response) => {
 	res.status(404).json({

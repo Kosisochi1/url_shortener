@@ -116,6 +116,14 @@ body{
 
 
 @media screen  and (max-width:650px){
+    .home{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-block-start: 3rem;
+        margin-inline-start: 4rem;
+        margin-inline-end: 2rem;
+    }
    
     .signup{
         width: 200px;
@@ -171,6 +179,7 @@ body{
         border: 4px solid rgb(236, 148, 148)
     }
     .main{
+        display: block;
         margin: 0 auto;
         height: fit-content;
         text-align: center;
