@@ -48,7 +48,7 @@ router.get('/signup', (req, res) => {
 
 
 
-router.post("/signup", async (req: any, res: any) => {
+router.post("/signup",validateUser, async (req: any, res: any) => {
 
 	console.log(req.body)
 	const createUser = await userController.createUser(req.body)
