@@ -132,7 +132,10 @@ router.post('/short_url', auth_1.default.authenticate, (req, res) => __awaiter(v
         res.render('home_render', { Data: response });
     }
     else if (response.code === 409) {
-        res.render('detail_exist', { loginUser: res.locals.loginUser || null });
+        res.render('home_render', { Data: response });
+    }
+    else if (response.code === 401) {
+        res.render('unauthorize', { loginUser: res.locals.loginUser || null });
     }
     else if (response.code === 400) {
         res.render('badRequest', { loginUser: res.locals.loginUser || null });
@@ -157,14 +160,18 @@ router.get('/s.com/*', (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.get('/history_list', auth_1.default.authenticate, cache_2.cacheMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield urlServices_1.default.historyList({ User_id: res.locals.loginUser._id });
-    const dKey = `cache-${res.locals.loginUser._id}`;
+    const dKey = `cache-${req.url}`;
     // console.log(response)
     if (response.code === 200) {
-        cache_1.default.set(dKey, response, 1 * 60 * 60);
+        cache_1.default.set(dKey, response.data, 1 * 60 * 60);
+        console.log(dKey);
         res.render('history', { Data: response.data });
     }
     else if (response.code === 500) {
         res.render('error', { loginUser: res.locals.loginUser || null });
+    }
+    else if (response.code === 401) {
+        res.render('unauthorize', { loginUser: res.locals.loginUser || null });
     }
     else {
         res.render('404', { loginUser: res.locals.loginUser || null });
@@ -179,27 +186,39 @@ router.get('/analytic', auth_1.default.authenticate, (req, res) => __awaiter(voi
     else if (response.code === 500) {
         res.render('error', { loginUser: res.locals.loginUser || null });
     }
+    else if (response.code === 401) {
+        res.render('unauthorize', { loginUser: res.locals.loginUser || null });
+    }
     else {
         res.render('noRecord', { loginUser: res.locals.loginUser || null });
     }
 }));
 router.post('/deleteOne/:id', auth_1.default.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    yield urlServices_1.default.deleteOne({ _id: id });
+    const response = yield urlServices_1.default.deleteOne({ _id: id });
+    if (response.code === 401) {
+        res.render('unauthorize', { loginUser: res.locals.loginUser || null });
+    }
     res.redirect('/history_list');
 }));
 router.post('/delete', auth_1.default.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
-    yield urlServices_1.default.deleteAll({ User_id: res.locals.loginUser._id });
+    const response = yield urlServices_1.default.deleteAll({ User_id: res.locals.loginUser._id });
+    if (response.code === 401) {
+        res.render('unauthorize', { loginUser: res.locals.loginUser || null });
+    }
     res.redirect('/history_list');
 }));
-router.get('/analytic/:id', auth_1.default.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/analytic/:id', auth_1.default.authenticate, cache_2.cacheMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield urlServices_1.default.findLongUrl({ _id: req.params.id });
     if (response.code === 200) {
         res.render('analyticDetails', { Data: response.data });
     }
     else if (response.code === 500) {
         res.render('error', { loginUser: res.locals.loginUser || null });
+    }
+    else if (response.code === 401) {
+        res.render('unauthorize', { loginUser: res.locals.loginUser || null });
     }
     else {
         res.render('noRecord', { loginUser: res.locals.loginUser || null });

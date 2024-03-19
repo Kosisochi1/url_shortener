@@ -10,12 +10,11 @@ body{
     height: 70vh;
 }
 .login{
-    width: 400px;
+    width: 300px;
     height: 300px;
     background-color: white;
     margin: 4rem auto;
     border-radius: 10px;
-    border: 3px outset aliceblue;
 }
 .form{
     width: 300px;
@@ -27,16 +26,15 @@ body{
 }
 .form>input{
     margin: 0.2rem 0.2rem;
-    width: 300px;
+    width: 250px;
     height: 30px;
     border: 4px groove aliceblue;
     border-radius: 4px;
 
 }
-.form>input,label{
+.form>label{
 
     margin: 0.2rem 0.2rem;
-    width: 300px;
     height: 25px;
 
 }
@@ -81,65 +79,5 @@ body{
 }
 @media screen  and (max-width:650px){
    
-    .login{
-        width: 200px;
-        height: 170px;
-        background-color: white;
-        margin: 1.5rem auto;
-        border-radius: 5px;
-        border: 1px outset aliceblue;
-    }
-    .form{
-        width: 200px;
-        height: 10px;
-        margin: 0 auto;
-        background-color: white;
-    
-    }
-    .form>input{
-        margin: 0.1rem 0.1rem;
-        width: 200px;
-        height: 20px;
-        border: 2px groove aliceblue;
-        border-radius: 2px;
-    
-    }
-    .form>input,label{
-    
-        margin: 0.1rem 0.1rem;
-        width: 180px;
-        height: 20px;
-    
-    }
-    .form>h3{
-        margin-bottom: 8px;
-        margin-top: 15px;
-    }
-    .form>.submit{
-        width: 100px;
-        margin: 0 auto;
-        margin-left: 50px;
-        background-color: rgb(236, 148, 148);
-        border: 4px solid rgb(236, 148, 148);
-        margin-top: 10px;
-    }
-    
-    /* success css*/
-    .success{
-        max-width: 200px;
-        height: 200px;
-        background-color: white;
-        margin: 4rem auto;
-        border-radius: 10px;
-        border: 3px outset aliceblue;
-        text-align: center;
-    }.success>h3,p{
-        margin-bottom: 30px;
-        margin-top: 10px;
-    }
-    .success>form>button{
-        background-color: rgb(236, 148, 148);
-        border:4px solid rgb(236, 148, 148);
-        border-radius: 4px;
-    }
+   
 }

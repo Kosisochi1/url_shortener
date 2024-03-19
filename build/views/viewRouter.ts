@@ -167,9 +167,13 @@ router.post('/short_url', auth.authenticate, async (req: any, res: any) => {
 		res.render('home_render',{Data:response})
 		
 	} else if (response.code === 409) {
-		res.render('detail_exist',{loginUser: res.locals.loginUser || null})
+		
+		res.render('home_render',{Data:response})
 
-	} else if (response.code === 400) {
+	}else if (response.code === 401) {
+		res.render('unauthorize',{loginUser: res.locals.loginUser || null})
+
+	}else if (response.code === 400) {
 		res.render('badRequest',{loginUser: res.locals.loginUser || null})
 
 	} else {
@@ -198,15 +202,19 @@ router.get('/s.com/*', async (req: any, res: any) => {
 router.get('/history_list', auth.authenticate, cacheMiddleWare, async (req: any, res: any) => {
 	
 	const response = await urlServices.historyList({ User_id: res.locals.loginUser._id })
-	const dKey = `cache-${res.locals.loginUser._id}`
+	const dKey = `cache-${req.url}`
 	// console.log(response)
 	if (response.code === 200) {
-		Cache.set(dKey, response, 1 * 60 * 60)
+		Cache.set(dKey, response.data, 1 * 60 * 60)
+		console.log(dKey)
 
 		res.render('history',{Data: response.data})
 	} else if (response.code === 500) {
 		res.render('error',{loginUser: res.locals.loginUser || null})
-	} else  {
+	}else if (response.code === 401) {
+		res.render('unauthorize',{loginUser: res.locals.loginUser || null})
+
+	}else {
 		res.render('404',{loginUser: res.locals.loginUser || null})
 
 	}
@@ -220,6 +228,9 @@ router.get('/analytic',auth.authenticate, async (req: any, res: any) => {
 		res.render('analystic',{Data: response.data})
 	} else if (response.code === 500) {
 		res.render('error',{loginUser: res.locals.loginUser || null})
+	}else if (response.code === 401) {
+		res.render('unauthorize',{loginUser: res.locals.loginUser || null})
+
 	} else  {
 		res.render('noRecord',{loginUser: res.locals.loginUser || null})
 
@@ -231,7 +242,11 @@ router.get('/analytic',auth.authenticate, async (req: any, res: any) => {
 router.post('/deleteOne/:id', auth.authenticate, async (req: any, res: any) => {
 	 
 	    const  id = req.params.id
-	     await urlServices.deleteOne({ _id:id })
+	const response = await urlServices.deleteOne({ _id: id })
+	if (response.code === 401) {
+		res.render('unauthorize',{loginUser: res.locals.loginUser || null})
+
+	}
 	res.redirect('/history_list')
 	
 
@@ -239,18 +254,26 @@ router.post('/deleteOne/:id', auth.authenticate, async (req: any, res: any) => {
 })
 router.post('/delete', auth.authenticate, async (req: any, res: any) => {
 	console.log(req.body)
-	await urlServices.deleteAll({ User_id: res.locals.loginUser._id })
+	 const response = await urlServices.deleteAll({ User_id: res.locals.loginUser._id })
+	 if (response.code === 401) {
+		res.render('unauthorize',{loginUser: res.locals.loginUser || null})
+
+	}
 	
 		res.redirect('/history_list')
 
 	
 })
-router.get('/analytic/:id', auth.authenticate,async (req: any,res: any) => {
+router.get('/analytic/:id', auth.authenticate,cacheMiddleWare, async (req: any,res: any) => {
 	const response = await urlServices.findLongUrl({ _id: req.params.id })
 	if (response.code === 200) {
+
 		res.render('analyticDetails',{Data:response.data})
 	} else if (response.code === 500) {
 		res.render('error',{loginUser: res.locals.loginUser || null})
+
+	}else if (response.code === 401) {
+		res.render('unauthorize',{loginUser: res.locals.loginUser || null})
 
 	} else {
 		res.render('noRecord',{loginUser: res.locals.loginUser || null})

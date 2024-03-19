@@ -84,11 +84,11 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             const decodeValue = yield jsonwebtoken_1.default.verify(token, secrete_key);
             res.locals.loginUser = decodeValue;
             logger_1.logger.info('[Auth Process]=> completed    ');
-            next();
         }
         else {
             return res.status(401).json({ massage: 'Not Authorize' });
         }
+        next();
     }
     catch (error) {
         logger_1.logger.info('[Auth Process]=> Server Error    ');

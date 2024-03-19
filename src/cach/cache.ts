@@ -6,13 +6,14 @@ const Cache = new NodeCache()
 
 export const cacheMiddleWare = async (req: any, res: any, next: NextFunction) => {
     try {
-        const { id } = req.params
-    const dKey = `cache-${id}`
+        const key  = req.url
+        const dKey = `cache-${key}`
+        console.log(dKey)
     const cachedData = Cache.get(dKey)
 
     if (cachedData) {
         console.log('cache hit')
-        return res.redirect(cachedData)
+		return res.render('history',{Data: cachedData})
         
     }
     next()

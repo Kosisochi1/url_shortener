@@ -68,7 +68,7 @@ const createShortUrl = (long_url, custom_url, userId) => __awaiter(void 0, void 
             return {
                 massage: 'short url exist',
                 code: 409,
-                url_exist: url_exist
+                data: { Short_url_link: url_exist.Short_url_link, Long_url: url_exist.Long_url, qRcode: url_exist.Qr_code }
             };
         }
         const short_url = yield urlModel_1.default.create({

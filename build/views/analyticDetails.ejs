@@ -11,14 +11,14 @@
 		<header><%- include('./partials/headers'); %></header>
 		<h1 class="h-home">Short URL</h1>
 		<main class="home">
-			<div class="short_url">
-				<h3>URL shortened</h3>
-				<h5>Long Link: <%= Data.Long_url%></h5>
-				<h5>Short Link: <%=Data.Short_url_link%></h5>
-				<h5>Visited: <%=Data.Url_click_count%></h5>
-				<h5>App: <%=Data.User_agent%></h5>
-				<h5>Created: <%=Data.createdAt%></h5>
-				<h5>Device: <%=Data.Click_by%></h5>
+			<div class="details">
+				<h6>URL shortened</h6>
+				<p><strong>Long Link</strong>: <%= Data.Long_url%></p>
+				<p><strong>Short Link</strong>: <%=Data.Short_url_link%></p>
+				<p><strong>Visited</strong>: <%=Data.Url_click_count%></p>
+				<p><strong>App</strong>: <%=Data.User_agent%></p>
+				<p><strong>Created</strong>: <%=Data.createdAt%></p>
+				<p><strong>Device</strong>: <%=Data.Click_by%></p>
 				<!-- <img src="<%=Data.qRcode%>" alt="QR Code" /> -->
 			</div>
 		</main>

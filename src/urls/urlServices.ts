@@ -68,7 +68,7 @@ const createShortUrl = async (long_url: any,custom_url:any, userId: any) => {
             return {
                 massage: 'short url exist',
                 code: 409,
-                url_exist:url_exist
+               data:{Short_url_link:url_exist.Short_url_link,Long_url:url_exist.Long_url,qRcode:url_exist.Qr_code}
             }
         }
 

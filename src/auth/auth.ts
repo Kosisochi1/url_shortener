@@ -61,10 +61,10 @@ const authenticate = async (req:any, res:any, next:NextFunction) => {
 			res.locals.loginUser = decodeValue;
 			logger.info('[Auth Process]=> completed    ');
 
-			next();
-    } else {
-        return res.status(401).json({massage:'Not Authorize'})
+        } else {
+            return res.status(401).json({massage:'Not Authorize'})
         }
+        next();
     } catch (error) {
         logger.info('[Auth Process]=> Server Error    ');
 

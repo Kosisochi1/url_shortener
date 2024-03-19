@@ -10,17 +10,56 @@ body{
     overflow: scroll;
     height: 100vh;
 }
+
+.main{
+    margin: 0 auto;
+    height: fit-content;
+    text-align: center;
+    font-size: xx-large;
+    font-style: italic;
+    padding-top: 50px;
+    position: relative;
+    
+} */
+/* Home */
+
+ .home{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-block-start: 3rem;
+    margin-inline-start: 1rem;
+    margin-inline-end: 1rem;
+}
+.form-home{
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
 .signup{
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     background-color: white;
     margin: 3rem auto;
     border-radius: 10px;
-    border: 3px outset aliceblue;
     position: relative;
 }
-.analytic{
+.login{
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    margin: 4rem auto;
+    border-radius: 10px;
+}
+.forgot{
     display: flex;
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.analytic{
+    height: 400px;
     margin-block-start: 2rem;
     margin-block-end: 2rem;
     margin-inline-start: 2rem;
@@ -32,24 +71,25 @@ body{
 }
 .form{
     width: 300px;
-    height: 250px;
+    height: 150px;
     margin: 0 auto;
     background-color: white;
-    padding-top: px;
+    padding: 8px;
 
 }
 .form>input{
-    margin: 0.2rem 0.2rem;
-    width: 300px;
+    width: 250px;
     height: 30px;
+    margin-left: 0.5rem;
+    margin-top: 1.5px;
+
     border: 4px groove aliceblue;
     border-radius: 4px;
 
 }
 .form>input,label{
 
-    margin: 0.2rem 0.2rem;
-    width: 300px;
+    margin-left: 1rem;
     height: 25px;
 
 }
@@ -59,140 +99,193 @@ body{
 }
 .form>.submit{
     width: 150px;
-    margin: 20px auto;
+    margin: 10px auto;
     margin-left: 70px;
     background-color: rgb(105, 161, 105);
     border: 4px solid rgb(105, 161, 105)
-}
-.main{
-    margin: 0 auto;
-    height: fit-content;
-    text-align: center;
-    font-size: xx-large;
-    font-style: italic;
-    padding-top: 50px;
-    position: relative;
-    
-}
-/* Home */
-.home{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-block-start: 3rem;
-    margin-inline-start: 4rem;
-    margin-inline-end: 2rem;
 }
 .h-home{
     margin-inline-start: 4rem;
     margin-block-start: 2rem;
 }
-.form{
-    width: 24rem;
-    padding-inline-start: 2rem;
-    padding-block-start: 2rem;
-    border-radius: 4rem;
-}
-.home>.form-home{
-    width: 4rem;
-}
+
+
 .short_url{
-    width: 20rem;
-    padding-inline-start: 2rem;
-    padding-inline-end: 2rem;
-    padding-block-start: 2rem;
-    line-height: 1.5rem;
+    width: 300px;
+    height: 150px;
+
+    margin:20px auto ;
+   padding: 8px;
     background-color: white;
-    border-radius: 2rem;
+    border-radius: 1rem;
+
+}
+.details{
+    width: 200px;
+    height: 200px;
+
+    margin:20px auto ;
+   padding: 8px;
+    background-color: white;
+    border-radius: 1rem;
+
+}
+.history{
+    width: 250px;
+    height: 220px;
+    
 
 }
 .short_url h3{
     margin-block-start: 1rem;
 }
 .short_url img{
-    padding-block-start: 1.5rem;
+    padding-block-start: 0.2rem;
+    max-width: 50px;
+    margin: 0 auto;
+}
+.delete{
+    margin-left: 170px;
+    margin-top: -40px;
+}
+.clear{
+    margin: 0 auto;
+    margin-left: 100px;
 }
 
 
 
-@media screen  and (max-width:650px){
+@media screen  and (min-width:640px){
     .home{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: space-between;
         margin-block-start: 3rem;
-        margin-inline-start: 4rem;
-        margin-inline-end: 2rem;
+        margin-inline-start: 1rem;
+        margin-inline-end: 1rem;
     }
-   
+    .form-home{
+        width: 400px;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
     .signup{
-        width: 200px;
-        height: 250px;
+        width: 400px;
+        height: 300px;
         background-color: white;
-        margin: 10px auto;
+        margin: 3rem auto;
         border-radius: 10px;
-        border: 1px outset aliceblue;
         position: relative;
     }
+    .login{
+        width: 400px;
+        height: 300px;
+        background-color: white;
+        margin: 4rem auto;
+        border-radius: 10px;
+    }
+    .forgot{
+        display: flex;
+        margin-top: 50px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
     .analytic{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        height: 200px;
         margin-block-start: 2rem;
         margin-block-end: 2rem;
-        margin-inline-start: 2rem;
-        margin-inline-end: 2rem;
-        column-gap: 2rem;
+        row-gap: 1rem;
        
         
         
     }
     .form{
-        width: 200px;
+        min-width: 400px;
         height: 200px;
         margin: 0 auto;
         background-color: white;
-        padding-top: px;
+        padding: 30px;
     
     }
     .form>input{
-        margin: 0.1rem 0.1rem;
-        width: 150px;
-        height: 5px;
-        border: 2px groove aliceblue;
-        border-radius: 2px;
+        width: 300px;
+        height: 30px;
+        margin-left: 0.5rem;
+        margin-top: 1.5px;
+    
+        border: 4px groove aliceblue;
+        border-radius: 4px;
     
     }
     .form>input,label{
     
-        margin: 4px;
-        width: 180px;
-        height: 20px;
+        margin-left: 1rem;
+        height: 25px;
     
     }
     .form>h3{
-        margin-bottom: 2px;
-        margin-top: 2px;
+        margin-bottom: 10px;
+        margin-top: 20px;
     }
     .form>.submit{
-        width: 100px;
-        margin: 0 auto;
-        margin-left: 50px;
-        background-color: rgb(236, 148, 148);
-        border: 4px solid rgb(236, 148, 148)
+        width: 150px;
+        margin: 10px auto;
+        margin-left: 70px;
+        background-color: rgb(105, 161, 105);
+        border: 4px solid rgb(105, 161, 105)
     }
-    .main{
-        display: block;
-        margin: 0 auto;
-        height: fit-content;
-        text-align: center;
-        font-size: xx-large;
-        font-style: italic;
-        padding-top: 50px;
-        position: relative;
+    .h-home{
+        margin-inline-start: 4rem;
+        margin-block-start: 2rem;
+    }
+    
+    
+    .short_url{
+        width: 300px;
+        height: 150px;
+    
+       padding: 8px;
+        background-color: white;
+        border-radius: 1rem;
+    
+    }
+    .details{
+        width: 250px;
+        height: 250px;
+    
+        margin-left: 2px ;
+       padding: 8px;
+        background-color: white;
+        border-radius: 1rem;
+    
+    }
+    .history{
+        width: 250px;
+        height: 220px;
         
+    
     }
-    .quote{
-        margin-bottom: 2rem;
+    .short_url h3{
+        margin-block-start: 1rem;
     }
-    .noBirthday{
-        margin-top: 4rem;
+    .short_url img{
+        padding-block-start: 0.2rem;
+        max-width: 50px;
+        margin: 0 auto;
     }
+    .delete{
+        margin-left: 170px;
+        margin-top: -40px;
+    }
+    .clear{
+        margin: 0 auto;
+        margin-left: 100px;
+    }
+    
+    
+
 }

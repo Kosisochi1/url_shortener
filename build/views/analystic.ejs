@@ -16,11 +16,10 @@
 			<%})%> -->
 
 			<%if(Data.length >= 0){%> <% Data.forEach(function(view_history){%>
-			<div>
+			<div class="">
 				<li>
-					<a href="/analytic/<%=view_history._id%>"
-						><p>Short Url:<%= view_history.Short_url_link%></p></a
-					>
+					<p><strong>Short Url: </strong><%= view_history.Short_url_link%></p>
+					<a href="/analytic/<%=view_history._id%>">View Details</a>
 				</li>
 				<!-- <p>Time Created:<%= view_history.createdAt%></p>
 				<p>Time Created:<%= view_history._id%></p>
