@@ -19,8 +19,7 @@ const userMiddleware_1 = require("../users/userMiddleware");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const auth_1 = __importDefault(require("../auth/auth"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
-const cache_1 = __importDefault(require("../cach/cache"));
-const cache_2 = require("../cach/cache");
+const cache_1 = require("../cach/cache");
 const router = express_1.default.Router();
 router.use((0, cookie_parser_1.default)());
 const limiter = (0, express_rate_limit_1.default)({
@@ -49,7 +48,7 @@ router.get('/index', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 router.get('/signup', (req, res) => {
     res.render('signup', { loginUser: res.locals.loginUser || null });
 });
-router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/signup", userMiddleware_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     const createUser = yield userServices_1.default.createUser(req.body);
     if (createUser.code == 201) {
@@ -158,13 +157,12 @@ router.get('/s.com/*', (req, res) => __awaiter(void 0, void 0, void 0, function*
     // Cache.set(dKey, goto, 48 * 60 * 60)
     res.redirect(goto);
 }));
-router.get('/history_list', auth_1.default.authenticate, cache_2.cacheMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/history_list', auth_1.default.authenticate, cache_1.cacheMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield urlServices_1.default.historyList({ User_id: res.locals.loginUser._id });
     const dKey = `cache-${req.url}`;
     // console.log(response)
     if (response.code === 200) {
-        cache_1.default.set(dKey, response.data, 1 * 60 * 60);
-        console.log(dKey);
+        // Cache.set(dKey, response.data, 1 * 60 * 60)
         res.render('history', { Data: response.data });
     }
     else if (response.code === 500) {
@@ -209,7 +207,7 @@ router.post('/delete', auth_1.default.authenticate, (req, res) => __awaiter(void
     }
     res.redirect('/history_list');
 }));
-router.get('/analytic/:id', auth_1.default.authenticate, cache_2.cacheMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/analytic/:id', auth_1.default.authenticate, cache_1.cacheMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield urlServices_1.default.findLongUrl({ _id: req.params.id });
     if (response.code === 200) {
         res.render('analyticDetails', { Data: response.data });

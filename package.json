@@ -2,10 +2,10 @@
   "name": "capstone_project",
   "version": "1.0.0",
   "description": "",
-  "main": "src/api.ts",
+  "main": "./build/api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/api.ts",
+    "start": "node ./build/api.js",
     "copyMySpecialFiles": "copyfiles --error --up 1 src/views/*.* src/public/*.* src/views/partials/*.* src/public/image/*.* build",
     "start:dev": "nodemon",
     "build": "rimraf ./build && tsc",

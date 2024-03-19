@@ -48,7 +48,7 @@ router.get('/signup', (req, res) => {
 
 
 
-router.post("/signup", async (req: any, res: any) => {
+router.post("/signup",validateUser, async (req: any, res: any) => {
 
 	console.log(req.body)
 	const createUser = await userController.createUser(req.body)
@@ -205,8 +205,8 @@ router.get('/history_list', auth.authenticate, cacheMiddleWare, async (req: any,
 	const dKey = `cache-${req.url}`
 	// console.log(response)
 	if (response.code === 200) {
-		Cache.set(dKey, response.data, 1 * 60 * 60)
-		console.log(dKey)
+		// Cache.set(dKey, response.data, 1 * 60 * 60)
+
 
 		res.render('history',{Data: response.data})
 	} else if (response.code === 500) {
